@@ -19,13 +19,15 @@ char	*joinheredoc(char *av)
 	{
 		limiter = readline(" > ");
 //		tmp = strjoin(av, "\n");
-        printf("[%s][%s]\n", limiter, tmp);
+        // printf("[%s][%s]\n", limiter, tmp);
 		if (ft_strcmp(tmp, limiter) != 0) // yaha
 		{
 			free(tmp);
 			tmp = hd_content;
 			hd_content = strjoin(hd_content, limiter);
+			hd_content = strjoin(hd_content, limiter);
 			frfr(tmp, limiter);
+            rmp
 		}
 		else
 		{

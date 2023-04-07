@@ -118,7 +118,7 @@ void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 	if(imp)
 		exec_imp(data, imp, 1);
 
-	if (!cmd->cmdp)
+	if (!cmd->cmdp[0])
 		exit(0);
 	execve(cmd->cmdp, cmd->cmd, data->envc);
 	ft_putstr_fd("command not found: ", 2);
@@ -166,6 +166,7 @@ void	tofork(t_data *data, int fd2)
 	int		ext_s;
 	// int		implmnd;
 	int		fdp[2];
+	// int		fdh[2];
 	// t_list	*cmd = data->cmd;
 	// cmd = data->cmd;
 	ext_s = 0;
@@ -175,6 +176,7 @@ void	tofork(t_data *data, int fd2)
 		perror("Error");
 		return ;
 	}
+
 	if(!data->cmd->next && data->nbrcmd == ft_lstsize(data->cmd) && check_implmnt(data) >= 4)
 	{
 		exec_imp(data, check_implmnt(data), 0);
@@ -200,7 +202,10 @@ void	tofork(t_data *data, int fd2)
 	else
 	{
 		parent(data, fdp);
-
+		// if(fdh[0] > 0)
+			// close(fdh[0]);
+		// if(fdp[0] > 0)
+			close(fdp[0]);
 		// close(fdp[1]);
 		// if ((accs(cmd->cmdp)))
 		// 	if (cmd->fdinout[0] >= 0)

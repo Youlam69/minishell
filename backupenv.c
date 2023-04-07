@@ -215,7 +215,6 @@ t_env *ft_envar(char **env)
 		ft_lstadd_back(&ptr, ft_lstnew(env[i]));
 		i++;
 	}
-	// exit(1);
 
 	shlvl(ptr);
     return (ptr);

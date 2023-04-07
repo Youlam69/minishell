@@ -18,6 +18,9 @@ char	*joinheredoc(char *av)
 			// free(tmp);
 			tmp = hd_content;
 			hd_content = strjoin(hd_content, limiter);
+            free(limiter);
+            limiter = hd_content;
+            hd_content = strjoin(hd_content, "\n");
 			frfr(tmp, limiter);
             limiter = NULL;
             tmp = NULL;
@@ -65,6 +68,9 @@ char *check_heredoc(t_list *cmd, char *str)
 			{
 				tmp_3 = ft_substr(str, s, j - s);
                 cmd->heredocstr = joinheredoc(tmp_3);
+                cmd->fdinout[0] = open("/tmp/justheredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
+                ft_putstr_fd(cmd->heredocstr, cmd->fdinout[1]);
+                // close(cmd->fdinout);
                 cmd->her_exist = 1;
 				tmp = ft_substr(str, 0, i);
 				tmp_2 = ft_substr(str, j, ft_strlen(str) - j);
@@ -126,13 +132,12 @@ char *check_redirection_in(t_list *cmd, char *str)
 			{
 				tmp_3 = ft_substr(str, s, j - s);
                 cmd->fdinout[0] = open(convet_value(tmp_3), O_RDONLY);
+                cmd->her_exist = 0;
 				tmp = ft_substr(str, 0, i);
 				tmp_2 = ft_substr(str, j, ft_strlen(str) - j);
-
                 free(str);
                 if(cmd->fdinout[0] < 0)
                 {
-
                     printf("minishell: %s: No such file or directory\n", tmp);  // khst tkun put str 2 fd
                     str = ft_strdup("");
                     --i; 
@@ -198,9 +203,7 @@ char *check_redirection_out(t_list *cmd, char *str)
                 free(str);
                 if(cmd->fdinout[1] < 0)
                 {
-
                     printf("minishell: %s: Permission denied\n", tmp);  // khst tkun put str 2 fd
-
                     str = ft_strdup("");
                     --i; 
                 }
