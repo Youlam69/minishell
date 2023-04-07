@@ -94,7 +94,7 @@ char    *strjoin(char *dst, char *src);
 int	ft_atoi(char *str);
 char	*ft_strtrim(char *s1, char *set);
 t_env *ft_envar(char **env);
-void ft_syntax_err(void);
+void ft_syntax_err(t_data *data);
 t_list *my_token(char *str);
 // void	ft_free_(char **tab);
 /////////////////////////////////////
@@ -123,6 +123,8 @@ void free_list(t_list *lst);
 void free_env(t_env *lst);
 void free_all_exit(t_data *data, int ref);
 void free_after_split(char **tab);
+void search_herdoc_and_redirection(t_list *cmd, char *str);
+
 
 // void ft_putstr_fd(char *str, int fd);
 

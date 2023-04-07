@@ -189,7 +189,7 @@ void shlvl(t_env *ev)
 			else
 				i++;
 			tmp = ev->val;
-			ev->val = ft_itoa(5);
+			ev->val = ft_itoa(i);
 			free(tmp);
 			break;
 		}

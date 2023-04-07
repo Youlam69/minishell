@@ -2,7 +2,7 @@
 #include "minishell.h"
 
 
-char    *check_dq(char *str)
+char    *check_dq(char *str, t_data *data)
 {
 	int i;
 	int q;
@@ -22,7 +22,7 @@ char    *check_dq(char *str)
 	}
 	if((dq % 2) != 0)
 	{
-		ft_syntax_err(); // free str should be free free
+		ft_syntax_err(data); // free str should be free free
 		free(str);
 		return NULL;
 	}
@@ -31,7 +31,7 @@ char    *check_dq(char *str)
 }
 
 
-char    *check_q(char *str)
+char    *check_q(char *str, t_data *data)
 {
 	int i;
 	int q;
@@ -51,7 +51,7 @@ char    *check_q(char *str)
 	}
 	if((q % 2) != 0)
 	{
-		ft_syntax_err(); // free str should be free free
+		ft_syntax_err(data); // free str should be free free
 		free(str);
 		return NULL;
 	}
@@ -59,7 +59,7 @@ char    *check_q(char *str)
 	return(str);
 }
 
-char *check_d_pip(char *str)
+char *check_d_pip(char *str, t_data *data)
 {
 	int i;
 	int j;
@@ -73,7 +73,7 @@ char *check_d_pip(char *str)
 				j++;
 			if(str[j] == '|')
 			{
-				ft_syntax_err(); // free str should be free free
+				ft_syntax_err(data); // free str should be free free
 				free(str);
 				return NULL;
 			}
@@ -82,7 +82,7 @@ char *check_d_pip(char *str)
 	}
 	if(str[0] == '|' || str[i - 1] == '|')
 	{
-		ft_syntax_err(); // free str should be free free
+		ft_syntax_err(data); // free str should be free free
 		free(str);
 		return NULL;
 	}
@@ -91,7 +91,7 @@ char *check_d_pip(char *str)
 }
 
 
-t_list *ft_cmd(t_list *tmp)
+void	ft_cmd(t_list *tmp)
 {
 	// t_list *tmp;
 	
@@ -106,7 +106,6 @@ t_list *ft_cmd(t_list *tmp)
 		// tmp->content = NULL;
 		tmp = tmp->next;
 	}
-	return(tmp);
 }
 
 // void	joinpath(t_list *cmd)
@@ -395,10 +394,10 @@ t_list *parsing(char *str, t_data *data)
 {
 	t_list *ptr;
 
-	str = check_q(str);
+	str = check_q(str,data);
 	if(!str)
 		return NULL;
-	str = check_dq(str);
+	str = check_dq(str, data);
 	if(!str)
 		return NULL;
 
@@ -407,7 +406,7 @@ t_list *parsing(char *str, t_data *data)
 	if(!str)
 		return NULL;
 	// printf("str = {%s}\n", str);
-	str = check_d_pip(str);
+	str = check_d_pip(str, data);
 	if(!str)
 		return NULL;
 	// (void)data;
@@ -425,6 +424,8 @@ t_list *parsing(char *str, t_data *data)
 	ptr = my_token(str);
 	////
 	// ptr = management_dollar(ptr, env);
+
+
 	ft_cmd(ptr);
 
 
