@@ -3,11 +3,11 @@
 void  hendl_ctr_c(int sig)
 {
     (void)sig;
-    printf("\n");
+    // printf("\n");
+	write(	1, "\n", 1);
     rl_on_new_line();
-    // rl_replace_line(" ", 0);
+    rl_replace_line("", 0);
 	rl_redisplay();
-		
 }
 
 void	frfr(char *str, char *ptr)
@@ -207,7 +207,7 @@ void	joinpath(t_data *data)
 				free(cmd->cmdp);
 			}
 			if (!data->splitedp[i])
-				cmd->cmdp = strdup(cmd->cmd[0]);
+				cmd->cmdp = ft_strdup(cmd->cmd[0]);
 		}
 		cmd = cmd->next;
 	}
@@ -388,6 +388,7 @@ int main (int ac, char **av, char **env)
 // exit(1);
 		data.nbrcmd = ft_lstsize(data.cmd);
         tofork(&data, 0);
+		// free(data.pwd);
 		free_all_exit(&data, 0);
 		// free(data.pwd);
 	// 	free_list(data.cmd);

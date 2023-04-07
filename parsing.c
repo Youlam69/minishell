@@ -26,7 +26,6 @@ char    *check_dq(char *str, t_data *data)
 		free(str);
 		return NULL;
 	}
-		
 	return(str);
 }
 
@@ -91,21 +90,45 @@ char *check_d_pip(char *str, t_data *data)
 }
 
 
-void	ft_cmd(t_list *tmp)
+int	ft_cmd(t_list *tmp)
 {
 	// t_list *tmp;
 	
 	// tmp = ptr;
+	// int i = 1;
 	while (tmp)
 	{
-		tmp->cmd = ft_split(tmp->content, ' ');
 		tmp->fdinout[0] = 0;
 		tmp->fdinout[1] = 1;
 		tmp->her_exist = 0;
+		tmp->content = check_heredoc(tmp, tmp->content);
+		if(!tmp->content)
+			return -1;
+		tmp->content = check_outapend(tmp, tmp->content);
+		if(!tmp->content)
+			return -1; 
+		tmp->content = check_redirection_in(tmp, tmp->content);
+		if(!tmp->content)
+			return -1;
+		tmp->content =check_redirection_out(tmp, tmp->content);
+		if(!tmp->content)
+			return -1;
+		// printf("-----------------------------------------------------\n");
+		// printf("lmra %d fd man mora : -%d-\n", i++, tmp->fdinout[0]);
+		// printf("content man mora : -%s-\n", tmp->content);
+		// printf("-----------------------------------------------------\n");
+
+		// fflush(stdout);
+		if(!tmp->content)
+			return -1;
+		tmp->cmd = ft_split(tmp->content, ' ');
+		// printf(" mora split awal cmnd : -%s-\n", tmp->cmd[0]);
+
 		// free(tmp->content);
 		// tmp->content = NULL;
 		tmp = tmp->next;
 	}
+	return 0;
 }
 
 // void	joinpath(t_list *cmd)
@@ -365,27 +388,33 @@ char *check_dollars(char *str, t_data *data)
 
 // }
 
+char *convet_value(char *str)
+{
+	int j;
+
+	j = -1;
+	while (str[++j])
+	{
+		if (str[j] < 0)
+		{
+			if( str[j] == -127)
+				str[j] = '\0';
+			else
+				str[j] *= -1;
+		}
+	}
+	return str;
+}
 
 void value_positif(t_list *cmd)
 {
 	int i;
-	int j;
 
 	while(cmd)
 	{
 		i = -1;
 		while(cmd->cmd[++i])
-		{
-			j = -1;
-			while (cmd->cmd[i][++j])
-				if (cmd->cmd[i][j] < 0)
-				{
-					if( cmd->cmd[i][j] == -127)
-						cmd->cmd[i][j] = '\0';
-					else
-						cmd->cmd[i][j] *= -1;
-				}
-		}
+			convet_value(cmd->cmd[i]);
 		cmd = cmd->next;
 	}
 }
@@ -416,31 +445,39 @@ t_list *parsing(char *str, t_data *data)
 	// exit(5);
 	str = check_attched_quoets(str);
 
-
     str = ft_del_qs(str);
 	if(!str)
 		return NULL;
 
 	ptr = my_token(str);
+	// t_list *tmp = ptr;
+	// while(tmp)
+	// {
+	// 		search_herdoc_and_redirection(tmp, tmp->content);
+
+	// 	tmp = tmp->next;
+	// }
+	
 	////
 	// ptr = management_dollar(ptr, env);
 
-
-	ft_cmd(ptr);
-
+	// while (ptr)
+	// {
+	// 	// while(*ptr->cmd)
+	// 	// {
+	// 	    printf("in{%d}\n", ptr->fdinout[0]);
+	// 	    printf("out{%d}\n", ptr->fdinout[1]);
+	// 	//     ptr->cmd++;
+	// 	// }
+	// 	ptr = ptr->next;
+	// }
+	// exit(5)	;
+	if(ft_cmd(ptr))
+		return NULL;
 
 		// ptr = convert(ptr);
 	
 	
 	
-	// while (ptr)
-	// {
-	// 	// while(*ptr->cmd)
-	// 	// {
-	// 	    printf("{%s}\n", ptr->cmdp);
-	// 	//     ptr->cmd++;
-	// 	// }
-	// 	ptr = ptr->next;
-	// }
 	return (ptr);
 }

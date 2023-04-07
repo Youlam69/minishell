@@ -80,7 +80,6 @@ void search_herdoc_and_redirection(t_list *cmd, char *str)
         if (!word) {
             break;
         }
-
         // check for heredoc operators
         if (ft_strcmp(word, "<<") == 0) {
             free(word);

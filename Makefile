@@ -18,8 +18,9 @@ SRC =	obj/Minishell.c\
 		obj/implement.c\
 		obj/export.c\
 		obj/free_or_exit.c\
-		obj/check_inout.c\
+		obj/redirection.c\
 		obj/ft_error.c
+		# obj/check_inout.c\
 		# obj/linked_list_totabstruct.c\
 
 

@@ -56,6 +56,24 @@ void	exec_imp(t_data *data, int imp, int ref)
 		exit (data->exit_status);
 }
 
+void hadler_quit(int sig)
+{
+	(void)sig;
+	// if(sig == SIGQUIT)
+	// {
+		write(1, "Quit\n", 5);
+		ft_putstr_fd("Quit\n", 2);
+		// exit(131);
+	// }
+}
+void handler_c(int sig)
+{
+	if(sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 2);
+		exit(130);
+	}
+}
 void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 {
 	t_list *cmd;
@@ -64,28 +82,44 @@ void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 
 	// data = *beta;
 	cmd = data->cmd;
+	if(cmd->fdinout[1] < 0 || cmd->fdinout[0] < 0)
+		exit(1);
 	close(fdp[0]);
 	if (cmd->next)
 	{
 		if (ft_lstsize(cmd) == data->nbrcmd)
 		{
-			if (cmd->fdinout[0] < 0)
-				exit(1); // should manage the errors
+			if(cmd->fdinout[1] > 1)
+				dup_close(cmd->fdinout[0], cmd->fdinout[1]);
+			else
 			dup_close(cmd->fdinout[0], fdp[1]);
 		}
 		else
-			dup_close(fd2, fdp[1]);
+		{	
+
+			if (cmd->fdinout[0] > 1)
+				dup2(cmd->fdinout[0], 0);
+			else
+				dup2(fd2, 0);
+			if (cmd->fdinout[1] > 1)
+				dup2(cmd->fdinout[1], 1);
+			else
+				dup2(fdp[1], 1);
+		}
 	}
 	else
-		dup_close(fd2, cmd->fdinout[1]);
+	{
+		if (ft_lstsize(cmd) == data->nbrcmd)
+			dup_close(cmd->fdinout[0], cmd->fdinout[1]);
+		else
+			dup_close(fd2, cmd->fdinout[1]);
+	}
 	imp = check_implmnt(data);
 	if(imp)
-	{
-
 		exec_imp(data, imp, 1);
-	}
 
-
+	if (!cmd->cmdp)
+		exit(0);
 	execve(cmd->cmdp, cmd->cmd, data->envc);
 	ft_putstr_fd("command not found: ", 2);
 	ft_putstr_fd(cmd->cmd[0], 2);
@@ -144,14 +178,22 @@ void	tofork(t_data *data, int fd2)
 	if(!data->cmd->next && data->nbrcmd == ft_lstsize(data->cmd) && check_implmnt(data) >= 4)
 	{
 		exec_imp(data, check_implmnt(data), 0);
-		return;
+		// return; katkhasar lia export khasny n7at variable exit f global variable
 	}
 	else
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+
 		pid = fork();
+	}
 	if (pid == -1)
 		return ;
 	if (pid == 0)
 	{
+		signal(SIGINT, handler_c);
+		signal(SIGQUIT, hadler_quit);
+
 		child(data, fdp, fd2);  // int *fdp == fdp[2]
 
 	}

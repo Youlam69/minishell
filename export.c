@@ -20,7 +20,7 @@ t_env	*ft_lstnew_export(char *var, char *val)
 
 
 
-int	check_var(char *var, char *arg, t_data *data)
+int	check_var(char *var, char *arg)
 {
 	int i;
 
@@ -34,29 +34,25 @@ int	check_var(char *var, char *arg, t_data *data)
 			ft_putstr_fd("bash: export: `",2); // putstr fd 2
 			ft_putstr_fd(arg,2); // putstr fd 2
 			ft_putstr_fd("': not a valid identifier\n",2); // putstr fd 2
-			data->exit_status = 1;
 			return(-1);
 		}
 	}
 	return (0);
 }
 
-t_env *add_to_env(char *var, char *val, t_data *data, int j)
+t_env *add_to_env(char *var, char *val, t_env *env, int j)
 {
-	t_env *env;
 	t_env *tmp;
 	t_env *tmp2;
+	// (void)tmp2;
+	// char* vr;
 	char* vl;
 
 	vl = NULL;
-	env = data->env;
+	// return;
 	vl = strjoin(var,val);
-	if(check_var(var,vl,data))
-	{
-		free(vl);
-		vl = NULL;
+	if(check_var(var,vl))
 		return env;
-	}
 	free(vl);
 		vl = NULL;
 	if(!env)
@@ -94,20 +90,20 @@ t_env *add_to_env(char *var, char *val, t_data *data, int j)
 	// exit(0);
 }
 
-t_env *split_export(char *arg, 	t_data *data)
+t_env *split_export(char *arg, 	t_env *env)
 {
 	int i;
 	int j;
 	char *var;
 	char *val;
-	t_env *env;
 
-	env = data->env;
+	i = 0;
 	j = 0;
+
 	i = sheegal(arg);
 	if( i == 0)
 	{
-		check_var(arg,arg,data);
+		check_var(arg,arg);
 		return env;
 	}
 	if(i > 1 && arg[i - 1] == '+')
@@ -120,13 +116,13 @@ t_env *split_export(char *arg, 	t_data *data)
 		val = malloc(sizeof(char)); // ft_malloc
 		val[0] = '\0';
 	}
-	if(check_var(var ,arg, data))
+	if(check_var(var ,arg))
 	{
 		frfr(var,val);
 		return (NULL);
 	}
 	else
-		env = add_to_env(var, val, data, j);
+		env = add_to_env(var, val, env, j);
 	return (env);
 }
 
@@ -262,9 +258,9 @@ void export(t_data* data, char** val)
 	{
 		// printf("hadi wast export string ly dakhla |%s|\n", val[i]);
 		if(sheegal(val[i]) == ft_strlen(val[i]))
-			data->env = add_to_env(val[i],NULL, data, 0);
+			data->env = add_to_env(val[i],NULL, data->env, 0);
 		else
-			data->env = split_export(val[i], data);
+			data->env = split_export(val[i], data->env);
 	}
 	if(i == 1)
 		print_env(env);

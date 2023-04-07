@@ -14,7 +14,6 @@
 # include <sys/wait.h>
 
 
-
 # define SQ 39
 # define DQ 34
 # define PIPE 124
@@ -67,7 +66,6 @@ typedef struct s_data
     t_env 		*env;
 	t_list 		*cmd;
 }   t_data;
-
 
 
 void ft_putstr_fd(char *str, int fd);
@@ -123,7 +121,12 @@ void free_list(t_list *lst);
 void free_env(t_env *lst);
 void free_all_exit(t_data *data, int ref);
 void free_after_split(char **tab);
-void search_herdoc_and_redirection(t_list *cmd, char *str);
+// void search_herdoc_and_redirection(t_list *cmd, char *str);
+char *check_redirection_in(t_list *cmd, char *str);
+char *check_redirection_out(t_list *cmd, char *str);
+char *check_heredoc(t_list *cmd, char *str);
+char *check_outapend(t_list *cmd, char *str);
+char *convet_value(char *str);
 
 
 // void ft_putstr_fd(char *str, int fd);

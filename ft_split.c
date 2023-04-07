@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/17 01:29:51 by ylamraou          #+#    #+#             */
+/*   Updated: 2021/12/18 19:10:35 by ylamraou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -42,72 +53,87 @@ char	*ft_substr(char *s, int start, int len)
 	return (str[j] = '\0', str);
 }
 
-static	int	ft_calcul(char *s, char d)
-{
-	int	i;
-	int	cont;
 
-	if (s[0] != d)
-		cont = 1;
-	else
-		cont = 0;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] && s[i] == d && s[i + 1] != d && s[i + 1] != '\0')
-			cont++;
-		i++;
-	}
-	return (cont);
+
+static int	size_str(char const *s, char c)
+{
+	int	len;
+
+	len = 0;
+	while (*s == c && *s)
+		s++;
+	while (s[len] != c && s[len])
+		len++;
+	return (len);
 }
 
-// void	ft_free_(char **tab)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (tab[i])
-// 		free(tab[i++]);
-// 	free(tab);
-// }
-
-static	char	**ft_my_split(char *str, char d, int i, int j)
+static int	size_tab(char const *s, char c)
 {
-	char	**tab;
-	int		debut;
-	int		fin;
+	int	size_2d;
 
-	if (!str)
-		return (NULL);
-	tab = (char **)malloc(sizeof(char *) * (ft_calcul(str, d) + 1));
-	if (!tab)
-		return (NULL);
-	while (str[i] != '\0')
+	size_2d = 0;
+	while (*s)
 	{
-		while (str[i] && str[i] == d)
-			i++;
-		debut = i;
-		while (str[i] && str[i] != d)
-			i++;
-		fin = i;
-		if (j < ft_calcul(str, d))
+		if (*s != c)
 		{
-			tab[j++] = ft_substr(str, debut, fin - debut);
-			if (!tab[j - 1])
-				return (free_after_split(tab), NULL);
+			size_2d++;
+			while (*s != c && *s)
+				s++;
 		}
+		while (*s == c && *s)
+			s++;
 	}
-	return (tab[j] = NULL, tab);
+	return (size_2d);
 }
 
-char	**ft_split(char *st, char c)
-{	
+char 	*alloc_str(char **tab, char  *s, char c, int i)
+{
+	int		j;
+	char	*str;
+
+	j = 0;
+	str = malloc(sizeof(char) * size_str(s, c) + 1);
+	if (!str)
+	{
+		while (i >= 0)
+			free(tab[i--]);
+		free(tab);
+		return (NULL);
+	}
+	while (*s && *s != c)
+		str[j++] = *s++;
+	str[j] = '\0';
+	tab[i] = str;
+	i++;
+	return (s);
+}
+
+char	**ft_split(char *s, char c)
+{
 	char	**tab;
 	int		i;
-	int		j;
+	int		len;
 
+	if (!s)
+		return (NULL);
+	len = size_tab(s, c);
+	tab = malloc(sizeof (char *) * len + 1);
+	if (!tab)
+		return (NULL);
+	if(!*s)
+	{
+		tab[0] = s;
+		return (tab);
+	}
 	i = 0;
-	j = 0;
-	tab = ft_my_split(st, c, i, j);
+	while (*s)
+	{
+		if (*s != c)
+			s = alloc_str (tab, s, c, i++);
+		if (!*s)
+			break ;
+		s++;
+	}
+	tab[i] = NULL;
 	return (tab);
 }
