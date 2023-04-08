@@ -133,6 +133,7 @@ int		check_error_and_space_reinout(char *str, int s);
 void	ft_putndl_fd(char *str, int fd);
 char *ft_strjoin(char *s1, char *s2);
 int tt(char *str);
+void	reset_rdr(t_rdr *tmp);
 // char	*check_redirection_in(int *tab, char *str, t_list *cmd);
 
 #endif

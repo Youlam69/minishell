@@ -83,20 +83,19 @@ char	**take_envc(t_env *env)
 		}
 		env = env->next;
 	}
-	envc[i] = NULL;
-	return (envc);
+	return (envc[i] = NULL, envc);
 }
 
-void	run_minishell(t_data *data)
+void start_mini(t_data *data, char *str, char *tmp, char **env)
 {
-	char	*str;
-	char	*tmp;
-
+	init_data(data);
+	data->env = ft_envar(env);
+	data->pwd = getcwd(NULL, 0);
 	while (2)
 	{
 		signal(SIGINT, hendl_ctr_c);
 		signal(SIGQUIT, SIG_IGN);
-		data->envc = take_envc(data->env); //shoul take it in boucle when i ussing my_t_env;
+		data->envc = take_envc(data->env);
 		data->splitedp = splitpath(data->env);
 		tmp = strjoin(data->pwd, " ~> ");
 		str = readline(tmp);
@@ -113,39 +112,16 @@ void	run_minishell(t_data *data)
 		free_all_exit(data, 0);
 	}
 }
+
 int main(int ac, char **av, char **env)
 {
 	t_data	data;
-	char	*str;
-	char	*tmp;
 
 	(void) av;
 	if (ac != 1)
-		return (printf("Minishell not take args \n "));		
-	init_data(&data);
-	data.env = ft_envar(env);
-	data.pwd = getcwd(NULL, 0);
-	// run_minishell(&data);
-	while (2)
-	{
-		signal(SIGINT, hendl_ctr_c);
-		signal(SIGQUIT, SIG_IGN);
-		data.envc = take_envc(data.env); //shoul take it in boucle when i ussing my_t_env;
-		data.splitedp = splitpath(data.env);
-		tmp = strjoin(data.pwd, " ~> ");
-		str = readline(tmp);
-		free(tmp);
-		if (!str)
-			free_all_exit(&data, 1);
-		add_history(str);
-		data.cmd = parsing(str, &data);
-		if (!data.cmd)
-			continue ;
-		joinpath(&data);
-		data.nbrcmd = ft_lstsize(data.cmd);
-		tofork(&data, 0);
-		free_all_exit(&data, 0);
-	}
+		return (printf("Minishell not take args \n "));
+	start_mini(&data, NULL, NULL, env);
+	return (0);
 }
 
 

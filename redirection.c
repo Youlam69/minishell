@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:34:18 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 21:38:45 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 22:04:43 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,39 +31,6 @@ int	joinheredoc(char *av)
 	close(fd[1]);
 	return (fd[0]);
 }
-// char	*joinheredoc(char *av)
-// {
-// 	char	*hd_content;
-// 	char	*limiter;
-// 	char	*tmp;
-
-// 	tmp = NULL;
-// 	hd_content = NULL;
-// 	while (1)
-// 	{
-// 		limiter = readline(" > ");
-// //		tmp = ft_strjoin(av, "\n");
-//         // printf("[%s][%s]\n", limiter, tmp);
-// 		if (ft_strcmp(av, limiter) != 0) // yaha
-// 		{
-// 			// free(tmp);
-// 			tmp = hd_content;
-// 			hd_content = ft_strjoin(hd_content, limiter);
-//             free(limiter);
-//             limiter = hd_content;
-//             hd_content = ft_strjoin(hd_content, "\n");
-// 			frfr(tmp, limiter);
-//             limiter = NULL;
-//             tmp = NULL;
-// 		}
-// 		else
-// 		{
-// 			frfr(tmp, limiter);
-// 			break ;
-// 		}
-// 	}
-// 	return (hd_content);
-// }
 
 void	nnn(t_rdr *tmp, char **str, t_list *cmd)
 {
@@ -112,7 +79,6 @@ char *check_heredoc(t_list *cmd, char *str)
 		}
 		tmp.i++;
 	}
-    // exit(0);
 	return(str);
 }
 
@@ -187,15 +153,43 @@ char *check_redirection_in(t_list *cmd, char *str)
 	return(str);
 }
 
+int	redir_assist(t_rdr *tmp, t_list *cmd, char **str)
+{
+	tmp->t3 = ft_substr(*str, tmp->s, tmp->j - tmp->s);
+    cmd->fdinout[1] = open(convet_value(tmp->t3), O_CREAT | O_RDWR | O_TRUNC, 0644);
+	tmp->t1 = ft_substr(*str, 0, tmp->i);
+	tmp->t2 = ft_substr(*str, tmp->j, ft_strlen(*str) - tmp->j);
+    free(*str);
+    if(cmd->fdinout[1] < 0)
+    {
+        printf("minishell: %s: Permission denied\n", tmp->t1);  // khst tkun put str 2 fd
+        *str = ft_strdup("");
+        --tmp->i;
+		return (0);
+    }
+    else
+        *str = ft_strjoin(tmp->t1, tmp->t2);
+    free(tmp->t2);
+	free(tmp->t3);
+	free(tmp->t1);
+	tmp->t1 = NULL;
+	tmp->t2 = NULL;
+	tmp->t3 = NULL;
+	return (1);
+}
+
+void	loop_over_j(char *str, t_rdr *tmp)
+{
+	while (str[tmp->j] != '\0')
+    {
+		if (str[tmp->j] == ' ' || str[tmp->j] == '<' || str[tmp->j] == '>')
+            break;
+        tmp->j++;
+    }
+}
 
 char *check_redirection_out(t_list *cmd, char *str)
 {
-	// int		i;
-	// int		j;
-	// int		s;
-	// char *tmp =	NULL;
-	// char *tmp_2 = NULL;
-	// char *tmp_3 = NULL;
 	t_rdr tmp;
 
 	reset_rdr(&tmp);
@@ -208,170 +202,68 @@ char *check_redirection_out(t_list *cmd, char *str)
             while(str[tmp.s] && str[tmp.s] == ' ')
                 tmp.s++;
             if (str[tmp.s] == '\0' || str[tmp.s] == '<' || str[tmp.j] == '>')
-            {
-                // ft_syntax_err();
-                printf("syntax error\n"); //// putsr
-                free(str);
-                return (NULL); ////
-                // return (NULL); ////
-            }
+				if (!tt(str))
+					return (NULL);
             tmp.j = tmp.s;
-			while (str[tmp.j] != '\0')
-            {
-				if (str[tmp.j] == ' ' || str[tmp.j] == '<' || str[tmp.j] == '>')
-                    break;
-                tmp.j++;
-            }
-    			if (tmp.s < tmp.j)
-			{
-				tmp.t3 = ft_substr(str, tmp.s, tmp.j - tmp.s);
-                cmd->fdinout[1] = open(convet_value(tmp.t3), O_CREAT | O_RDWR | O_TRUNC, 0644);
-				tmp.t1 = ft_substr(str, 0, tmp.i);
-				tmp.t2 = ft_substr(str, tmp.j, ft_strlen(str) - tmp.j);
-
-                free(str);
-                if(cmd->fdinout[1] < 0)
-                {
-                    printf("minishell: %s: Permission denied\n", tmp.t1);  // khst tkun put str 2 fd
-                    str = ft_strdup("");
-                    --tmp.i; 
-                }
-                else
-                    str = ft_strjoin(tmp.t1, tmp.t2);
-                free(tmp.t2);
-				free(tmp.t3);
-				free(tmp.t1);
-				tmp.t1 = NULL;
-				tmp.t2 = NULL;
-			}
+			loop_over_j(str, &tmp);
+    		if (tmp.s < tmp.j)
+				if (!redir_assist(&tmp, cmd, &str))
+					break ;
 		}
 		tmp.i++;
 	}
-    // exit(0);
 	return(str);
 }
 
+
+int	outapent_plus(t_rdr *tmp, char **str, t_list *cmd)
+{
+	tmp->t3 = ft_substr(*str, tmp->s, tmp->j - tmp->s);
+    cmd->fdinout[1] = open(convet_value(tmp->t3), O_CREAT | O_RDWR | O_APPEND, 0644);
+	tmp->t1 = ft_substr(*str, 0, tmp->i);
+	tmp->t2 = ft_substr(*str, tmp->j, ft_strlen(*str) - tmp->j);
+    free(*str);
+    if(cmd->fdinout[1] < 0)
+    {
+        printf("minishell: %s: Permission denied\n", tmp->t1);  // khst tkun put str 2 fd
+        *str = ft_strdup("");
+		return (0);
+    }
+    else
+        *str = ft_strjoin(tmp->t1, tmp->t2);
+    free(tmp->t2);
+	free(tmp->t3);
+	free(tmp->t1);
+	tmp->t1 = NULL;
+	tmp->t2 = NULL;
+	tmp->t3 = NULL;
+	return (1);
+}
 
 char *check_outapend(t_list *cmd, char *str)
 {
-	int		i;
-	int		j;
-	int		s;
-	char *tmp =	NULL;
-	char *tmp_2 = NULL;
-	char *tmp_3 = NULL;
+	t_rdr tmp;
 
-	i = 0;
-	while (str[i])
+	reset_rdr(&tmp);
+	while (str[tmp.i])
 	{
-		j = i + 2;
-		if (str[i] == '>' && str[i + 1] == '>')
+		tmp.j = tmp.i + 2;
+		if (str[tmp.i] == '>' && str[tmp.i + 1] == '>')
 		{
-            //check_<< nno should be error
-            s = j;
-            while(str[s] && str[s] == ' ')
-                s++;
-            if (str[s] == '\0' || str[s] == '<' || str[j] == '>')
-            {
-                // ft_syntax_err();
-                printf("syntax error\n");
-                free(str);
-                return (NULL); ////
-            }
-            j = s;
-			while (str[j] && str[j] != ' ' && str[j] != '<' && str[j] != '>')
-				j++;
-			if (s < j)
-			{
-				tmp_3 = ft_substr(str, s, j - s);
-                cmd->fdinout[1] = open(convet_value(tmp_3), O_CREAT | O_RDWR | O_APPEND, 0644);
-				tmp = ft_substr(str, 0, i);
-				tmp_2 = ft_substr(str, j, ft_strlen(str) - j);
-
-                free(str);
-                if(cmd->fdinout[1] < 0)
-                {
-
-                    printf("minishell: %s: Permission denied\n", tmp);  // khst tkun put str 2 fd
-
-                    str = ft_strdup("");
-                    --i; 
-                }
-                else
-                    str = ft_strjoin(tmp, tmp_2);
-                free(tmp_2);
-				free(tmp_3);
-				free(tmp);
-				tmp = NULL;
-				tmp_2 = NULL;
-			}
+            tmp.s = tmp.j;
+            while(str[tmp.s] && str[tmp.s] == ' ')
+                tmp.s++;
+            if (str[tmp.s] == '\0' || str[tmp.s] == '<' || str[tmp.j] == '>')
+				if (!tt(str))
+					return (NULL);
+            tmp.j = tmp.s;
+			while (str[tmp.j] && str[tmp.j] != ' ' && str[tmp.j] != '<' && str[tmp.j] != '>')
+				tmp.j++;
+			if (tmp.s < tmp.j)
+				if (!outapent_plus(&tmp, &str, cmd))
+					break ;
 		}
-		i++;
+		tmp.i++;
 	}
-    // exit(0);
 	return(str);
 }
-
-// void check_redirection_heredoc(t_list *cmd, char *tab)
-// {
-
-//     int i;
-//     int j;
-
-//     i = 0;
-//     j = 0;
-    
-//     char *fdname;
-//     char *str;
-
-//     while (str[i])
-//     {
-//         if (str[i] == '<' && str[i + 1] != '<')
-//         {
-//             j = i + 1;
-//             if(!str[i + 1])
-//             {
-//                 if(cmd->next)
-//                 ft_syntax_err();
-//                 return;
-
-//             }
-//             if(str[i + 2] == '<')
-//             {
-//                 ft_syntax_err();
-//                 exit_status = 2;
-//                 // ft_syntax_err(data);
-//                 // ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-//                 return;
-//             }
-//             while (str[j] == ' ')
-//                 j++;
-//             i = j;
-//             while (str[j] &&  str[j] != ' ' && str[j] != '<')
-//                 j++;
-//             t
-//             if (str[j] == '\0')
-//             {
-//                 ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-//                 return (NULL);
-//             }
-//             while (str[j] == ' ')
-//                 j++;
-//             if (str[j] == '\0')
-//             {
-//                 ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-//                 return (NULL);
-//             }
-//             while (str[j] != ' ' && str[j] != '\0')
-//                 j++;
-//             if (str[j] != '\0')
-//             {
-//                 ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-//                 return (NULL);
-//             }
-//         }
-//         i++;
-//     }
-    
-
-// }

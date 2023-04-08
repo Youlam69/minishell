@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 08:44:59 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 20:19:17 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 22:30:57 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,6 @@ int is_good(char c)
 	return (0);
 }
 
-// int	ft_strcmp(char *s1, char *s2)
-// {
-// 	unsigned char	*c1;
-// 	unsigned char	*c2;
-
-// 	c1 = (unsigned char *)s1;
-// 	c2 = (unsigned char *)s2;
-// 	while ((*c1 || *c2))
-// 	{
-// 		if (*c1 != *c2)
-// 			return (*c1 - *c2);
-// 		c1++;
-// 		c2++;
-// 	}
-// 	return (0);
-// }
-
 int	valid_var(char c)
 {
 	if(is_good(c))
@@ -127,54 +110,48 @@ char *ft_itoa(int nbr)
 	return (tab);
 }
 
+void	dollar_start(char **str, t_data *data, t_rdr *tmp)
+{
+	tmp->t1 = ft_substr(*str, tmp->i + 1, tmp->j - tmp->i - 1);
+	tmp->t2 = cmp_env(tmp->t1, data->env);
+	free(tmp->t1);
+	tmp->t1 = ft_substr(*str, 0, tmp->i);
+	tmp->t3 = ft_substr(*str, tmp->j, ft_strlen(*str) - tmp->j);
+	if((*str)[tmp->i + 1] == '\?')
+		tmp->t2 = strjoin(tmp->t1, ft_itoa(data->exit_status));
+	else
+		tmp->t2 = strjoin(tmp->t1, tmp->t2);
+	free(*str);
+	tmp->j = ft_strlen(tmp->t2);
+	free(tmp->t1);
+	tmp->t1 = NULL;
+	*str = strjoin(tmp->t2, tmp->t3);
+	free(tmp->t2);
+	tmp->t2 = NULL;
+	free(tmp->t3);
+	tmp->t3 = NULL;
+}
+
 char	*check_dollars(char *str, t_data *data)
 {
-	int		i;
-	int		j;
-	char	*tmp;
-	char	*tmp_2;
-	char	*tmp_3;
+	t_rdr	tmp;
 
-	tmp = NULL;
-	tmp_2 = NULL;
-	tmp_3 = NULL;
-	i = 0;
-	while (str[i])
+	reset_rdr(&tmp);
+	while (str[tmp.i])
 	{
-		j = i + 1;
-		if (str[i] == '$')
+		tmp.j = tmp.i + 1;
+		if (str[tmp.i] == '$')
 		{
-			if (str[j] == DQ || str[j] == SQ || str[j] == '\?')
-				j++;
+			if (str[tmp.j] == DQ || str[tmp.j] == SQ || str[tmp.j] == '\?')
+				tmp.j++;
 			else
-				while (str[j] && valid_var(str[j]))
-					j++;
-			if (i < j - 1)
-			{
-				tmp = ft_substr(str, i + 1, j - i - 1);
-				tmp_2 = cmp_env(tmp, data->env);
-				free(tmp);
-				tmp = ft_substr(str, 0, i);
-				tmp_3 = ft_substr(str, j, ft_strlen(str) - j);
-				if(str[i + 1] == '\?')
-					tmp_2 = strjoin(tmp, ft_itoa(data->exit_status));
-				else
-					tmp_2 = strjoin(tmp, tmp_2);
-				free(str);
-				j = ft_strlen(tmp_2);
-				free(tmp);
-				tmp = NULL;
-				str = strjoin(tmp_2, tmp_3);
-				free(tmp_2);
-				tmp_2 = NULL;
-				free(tmp_3);
-				tmp_3 = NULL;
-			}
+				while (str[tmp.j] && valid_var(str[tmp.j]))
+					tmp.j++;
+			if (tmp.i < tmp.j - 1)
+				dollar_start(&str, data, &tmp);
 		}
-		// fflush(stdout);
-		i = j;
+		tmp.i = tmp.j;
 	}
-	
 	return (str);
 }
 
@@ -212,12 +189,19 @@ void	value_positif(t_list *cmd)
 	}
 }
 
+int	start_parse(char **str, t_data *data)
+{
+	*str = check_q(*str, data);
+	if (!(*str))
+		return (0);
+	return (1);
+}
+
 t_list	*parsing(char *str, t_data *data)
 {
 	t_list	*ptr;
 
-	str = check_q(str, data);
-	if (!str)
+	if (!start_parse(&str, data))
 		return (NULL);
 	str = check_dq(str, data);
 	if (!str)
@@ -239,6 +223,6 @@ t_list	*parsing(char *str, t_data *data)
 	ptr = my_token(str);
 	if (ft_cmd(ptr))
 		return (NULL);
-	return (ptr);
+	return (value_positif(ptr), ptr);
 }
 
