@@ -51,6 +51,12 @@ typedef struct s_rdr
 	char	*t3;
 }	t_rdr;
 
+typedef struct s_envv {
+	t_env	*tmp;
+	t_env	*tmp2;
+	char	*vl;
+}	t_envv;
+
 typedef struct s_data
 {
 	int			nbrcmd;

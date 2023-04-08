@@ -35,43 +35,48 @@ int	check_var(char *var, char *arg)
 	return (0);
 }
 
-t_env	*add_to_env(char *var, char *val, t_env *env, int j)
+int	add_to_env_plus(t_envv *tmp, char *var, char *val, t_env **env)
 {
-	t_env	*tmp;
-	t_env	*tmp2;
-	char	*vl;
-
-	vl = strjoin(var, val);
-	if (check_var(var, vl))
-		return env;
-	free(vl);
-		vl = NULL;
+	tmp->vl = strjoin(var, val);
+	if (check_var(var, tmp->vl))
+		return (0);
+	free(tmp->vl);
+		tmp->vl = NULL;
 	if (!env)
 	{
-		env = ft_lstnew_export(var, val);
-		return (env);
+		*env = ft_lstnew_export(var, val);
+		return (0);
 	}
-	tmp = env;
-	while (tmp)
+	tmp->tmp = *env;
+	return (1);
+}
+
+t_env	*add_to_env(char *var, char *val, t_env *env, int j)
+{
+	t_envv	tmp;
+
+	if (!add_to_env_plus(&tmp, var, val, &env))
+		return (env);
+	while (tmp.tmp)
 	{
-		if (!strcmp(var, tmp->var))
+		if (!ft_strcmp(var, tmp.tmp->var))
 		{
 			if (!val)
 				return (env);
-			vl = tmp->val;
+			tmp.vl = tmp.tmp->val;
 			if (j)
-				tmp->val = strjoin(tmp->val, val);
+				tmp.tmp->val = strjoin(tmp.tmp->val, val);
 			else
-				tmp->val = val;
-			free(vl);
-			vl = NULL;
+				tmp.tmp->val = val;
+			free(tmp.vl);
+			tmp.vl = NULL;
 			return (env);
 		}
-		tmp2 = tmp;
-		tmp = tmp->next;
+		tmp.tmp2 = tmp.tmp;
+		tmp.tmp = tmp.tmp->next;
 	}
-	if (!tmp)
-		tmp2->next = ft_lstnew_export(var, val);
+	if (!tmp.tmp)
+		tmp.tmp2->next = ft_lstnew_export(var, val);
 	return (env);
 }
 

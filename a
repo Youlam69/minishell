@@ -30,7 +30,6 @@ joinpath.c
 joinpath.o
 libft.c
 lil
-lol
 ls 
 minishell.h
 obj

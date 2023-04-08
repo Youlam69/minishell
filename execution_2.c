@@ -44,6 +44,27 @@ void	handler_c(int sig)
 	}
 }
 
+void	child_help(t_list *cmd, t_data *data, int *fdp, int fd2)
+{
+	if (ft_lstsize(cmd) == data->nbrcmd)
+	{
+		if (cmd->fdinout[1] > 1)
+			dup_close(cmd->fdinout[0], cmd->fdinout[1]);
+		else
+			dup_close(cmd->fdinout[0], fdp[1]);
+	}
+	else
+	{	
+		if (cmd->fdinout[0] > 1)
+			dup2(cmd->fdinout[0], 0);
+		else
+			dup2(fd2, 0);
+		if (cmd->fdinout[1] > 1)
+			dup2(cmd->fdinout[1], 1);
+		else
+			dup2(fdp[1], 1);
+	}
+}
 
 void	child(t_data *data, int *fdp, int fd2)
 {
@@ -55,26 +76,7 @@ void	child(t_data *data, int *fdp, int fd2)
 		exit(1);
 	close(fdp[0]);
 	if (cmd->next)
-	{
-		if (ft_lstsize(cmd) == data->nbrcmd)
-		{
-			if (cmd->fdinout[1] > 1)
-				dup_close(cmd->fdinout[0], cmd->fdinout[1]);
-			else
-				dup_close(cmd->fdinout[0], fdp[1]);
-		}
-		else
-		{	
-			if (cmd->fdinout[0] > 1)
-				dup2(cmd->fdinout[0], 0);
-			else
-				dup2(fd2, 0);
-			if (cmd->fdinout[1] > 1)
-				dup2(cmd->fdinout[1], 1);
-			else
-				dup2(fdp[1], 1);
-		}
-	}
+		child_help(cmd, data, fdp, fd2);
 	else
 	{
 		if (ft_lstsize(cmd) == data->nbrcmd)
@@ -105,14 +107,8 @@ void	parent(t_data *data, int *fdp)
 		close(fdp[0]);
 }
 
-void	tofork(t_data *data, int fd2)
+void	tofork_plus(int *pid, t_data *data, int *fdp)
 {
-	pid_t	pid;
-	int		ext_s;
-	int		fdp[2];
-
-	ext_s = 0;
-	pid = -3;
 	if (pipe(fdp) < 0)
 	{
 		perror("Error");
@@ -125,15 +121,40 @@ void	tofork(t_data *data, int fd2)
 	{
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
-		pid = fork();
+		*pid = fork();
 	}
+}
+
+void	tofork(t_data *data, int fd2)
+{
+	pid_t	pid;
+	int		ext_s;
+	int		fdp[2];
+
+	ext_s = 0;
+	pid = -3;
+	tofork_plus(&pid, data, fdp);
+	// if (pipe(fdp) < 0)
+	// {
+	// 	perror("Error");
+	// 	return ;
+	// }
+	// if (!data->cmd->next && data->nbrcmd == ft_lstsize(data->cmd) \
+	// 			&& check_implmnt(data) >= 4)
+	// 	exec_imp(data, check_implmnt(data), 0);
+	// else
+	// {
+	// 	signal(SIGINT, SIG_IGN);
+	// 	signal(SIGQUIT, SIG_IGN);
+	// 	pid = fork();
+	// }
 	if (pid == -1)
 		return ;
 	if (pid == 0)
 	{
 		signal(SIGINT, handler_c);
 		signal(SIGQUIT, hadler_quit);
-		child(data, fdp, fd2);  // int *fdp == fdp[2]
+		child(data, fdp, fd2);
 	}
 	else
 		parent(data, fdp);
