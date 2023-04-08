@@ -151,6 +151,21 @@ void	*ft_calloc(int count, int size)
 // 	ft_strlcat(str, s2, l2 + 1);
 // 	return (str);
 // }
+
+void	strjoin_help(char *src, int *i, char *tmp)
+{
+	int	len;
+
+	len = 0;
+	while(src && src[len])
+	{
+		tmp[*i] = src[len];
+		len++;
+		(*i)++;
+	}
+	tmp[*i] = '\0';
+}
+
 char    *strjoin(char *dst, char *src)
 {
 	int i;
@@ -176,16 +191,10 @@ char    *strjoin(char *dst, char *src)
 	}
 	if(!src)
 		return tmp;
-	ln = 0 ;
-	while(src && src[ln])
-	{
-		tmp[i] = src[ln];
-		ln++;
-		i++;
-	}
-	tmp[i] = '\0';
-	return tmp;
+	strjoin_help(src, &i, tmp);
+	return (tmp);
 }
+
 char    *ft_strjoin(char *s1, char *s2)
 {
     int        len;

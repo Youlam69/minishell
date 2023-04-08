@@ -134,20 +134,6 @@ void	tofork(t_data *data, int fd2)
 	ext_s = 0;
 	pid = -3;
 	tofork_plus(&pid, data, fdp);
-	// if (pipe(fdp) < 0)
-	// {
-	// 	perror("Error");
-	// 	return ;
-	// }
-	// if (!data->cmd->next && data->nbrcmd == ft_lstsize(data->cmd) \
-	// 			&& check_implmnt(data) >= 4)
-	// 	exec_imp(data, check_implmnt(data), 0);
-	// else
-	// {
-	// 	signal(SIGINT, SIG_IGN);
-	// 	signal(SIGQUIT, SIG_IGN);
-	// 	pid = fork();
-	// }
 	if (pid == -1)
 		return ;
 	if (pid == 0)
