@@ -6,12 +6,11 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 08:44:59 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 09:25:58 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 17:59:39 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 int	ft_cmd(t_list *tmp)
 {
@@ -37,7 +36,6 @@ int	ft_cmd(t_list *tmp)
 	}
 	return (0);
 }
-
 
 int	is_digit(char c)
 {

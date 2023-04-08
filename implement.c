@@ -16,6 +16,18 @@ int	ft_strncmp(char *s1, char *s2, int n)
 	return (s1[i] - s2[i]);
 }
 
+void	ft_putndl_fd(char *str, int fd)
+{
+	int	i;
+
+	i = -1;
+	if (!str)
+		return ;
+	while (str[++i])
+		write(fd, &str[i], 1);
+	write(fd, "\n", 1);
+}
+
 void	ft_putstr_fd(char *str, int fd)
 {
 	int	i;

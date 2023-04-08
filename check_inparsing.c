@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 11:56:44 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 11:56:45 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:06:25 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,9 @@ int	annex_d_pp(t_data *data, char *str)
 
 char	*check_d_pip(char *str, t_data *data)
 {
-	int	i;
-	int	j;
-
 	if (annex_d_pp(data, str))
 		return (NULL);
-	if (str[0] == '|' || str[i - 1] == '|')
+	if (str[0] == '|' || str[ft_strlen(str) - 1] == '|')
 	{
 		ft_syntax_err(data);
 		free(str);

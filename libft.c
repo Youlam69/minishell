@@ -68,7 +68,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 	c1 = (unsigned char *)s1;
 	c2 = (unsigned char *)s2;
-	while ((*c1 || *c2))
+	while ( c1 && c2 && (*c1 || *c2))
 	{
 		if (*c1 != *c2)
 			return (*c1 - *c2);
@@ -90,39 +90,211 @@ int	ft_strcmp(const char *s1, const char *s2)
 //     }
 //     return(i);
 // }
+void	*ft_memset(void *b, int c, size_t len)
+{
+	size_t	i;
+	char	*ptr;
 
+	ptr = (char *)b;
+	i = 0;
+	while (i < len)
+		ptr[i++] = (unsigned char)c;
+	return (ptr);
+}
+void	ft_bzero(void *s, size_t n)
+{
+	ft_memset(s, '\0', n);
+}
+int	ft_strlcat(char *dst, char *src, int size)
+{
+	int	i;
+	int	lendst;
+	int	lensrc;
+
+	i = 0;
+	lendst = ft_strlen(dst);
+	lensrc = ft_strlen(src);
+	if (size < lendst)
+		return (size + lensrc);
+	while (*src && (lendst + i + 1) < size)
+		dst[lendst + i++] = *src++;
+	dst[lendst + i] = '\0';
+	return (lendst + lensrc);
+}
+
+void	*ft_calloc(int count, int size)
+{
+	void	*s;
+
+	s = malloc(count * size);
+	if (!s)
+		return (0);
+	ft_bzero(s, count * size);
+	return (s);
+}
+
+// char	*ft_strjoin(char *s1, char *s2)
+// {
+// 	char	*str;
+// 	size_t	l1;
+// 	size_t	l2;
+
+// 	if (!s1 || !s2)
+// 		return (NULL);
+// 	l1 = ft_strlen(s1);
+// 	l2 = ft_strlen(s2);
+// 	str = (char *)ft_calloc(l1 + l2 + 1, sizeof(char));
+// 	if (!str)
+// 		return (NULL);
+// 	ft_strlcat(str, s1, l1 + 1);
+// 	l2 = l2 + l1;
+// 	ft_strlcat(str, s2, l2 + 1);
+// 	return (str);
+// }
 char    *strjoin(char *dst, char *src)
 {
-    int i;
-    int ln;
-    char *tmp = NULL;
+	int i;
+	int ln;
+	char *tmp = NULL;
 
-    i = 0;
-    ln = ft_strlen(dst) + ft_strlen(src);
-    tmp = malloc(sizeof(char) * (ln + 1));
+	i = 0;
+	ln = ft_strlen(dst) + ft_strlen(src);
+	tmp = malloc(sizeof(char) * (ln + 1));
 	if(!tmp)
 	{
 		printf("Error: malloc failed in strjoin\n");
 		return NULL;
 	}
 	tmp[ln] = '\0';
-    if(dst)
-    {
-        while(dst[i])
+	if(dst)
+	{
+		while(dst[i])
 		{
-            tmp[i] = dst[i];
+			tmp[i] = dst[i];
 			i++;
 		}
-    }
+	}
 	if(!src)
 		return tmp;
-    ln = 0 ;
-    while(src[ln])
-    {
-        tmp[i] = src[ln];
-        ln++;
-        i++;
-    }
-    tmp[i] = '\0';
-    return tmp;
+	ln = 0 ;
+	while(src && src[ln])
+	{
+		tmp[i] = src[ln];
+		ln++;
+		i++;
+	}
+	tmp[i] = '\0';
+	return tmp;
 }
+
+// char	*strjoin(char *str1, char *str2) 
+// {
+//     if (str1 == NULL || str2 == NULL) {
+//         return NULL;
+//     }
+
+//     int len1 = 0;
+//     while (str1[len1] != '\0') {
+//         len1++;
+//     }
+
+//     int len2 = 0;
+//     while (str2[len2] != '\0') {
+//         len2++;
+//     }
+
+//     char *result = (char*) malloc(len1 + len2 + 1);
+	
+//     if (result != NULL) {
+//         int i = 0;
+//         while (i < len1) {
+//             result[i] = str1[i];
+//             i++;
+//         }
+		
+//         int j = 0;
+//         while (j < len2) {
+//             result[i + j] = str2[j];
+//             j++;
+//         }
+		
+//         result[i + j] = '\0';
+//     }
+	
+//     return result;
+// }
+
+// char *strjoin(char *str1, char *str2)
+//  {
+// 	int len1;
+// 	char *result;
+
+// 	len1 = 0;
+// 	if (str1 == NULL || str2 == NULL) 
+// 		return (NULL);
+// 	while (str1[len1] != '\0')
+// 		len1++;
+
+
+// 	len2 = 0;
+// 	while (str2[len2] != '\0') {
+// 		len2++;
+// 	}
+
+// 	result = (char*) malloc(len1 + len2 + 1);
+// 	if (result == NULL) {
+// 		return NULL;
+// 	}
+	
+// 	char *p = result;
+// 	char *q = str1;
+// 	while (*q != '\0') {
+// 		*p++ = *q++;
+// 	}
+	
+// 	q = str2;
+// 	while (*q != '\0') {
+// 		*p++ = *q++;
+// 	}
+	
+// 	*p = '\0';
+	
+// 	return result;
+// }
+
+
+
+
+
+
+
+
+// // char *strjoin(char *str1, char *str2) {
+// //     if (str1 == NULL || str2 == NULL) {
+// //         return NULL;
+// //     }
+
+// //     size_t len1 = 0;
+// //     while (str1[len1] != '\0') {
+// //         len1++;
+// //     }
+	
+// //     size_t len2 = 0;
+// //     while (str2[len2] != '\0') {
+// //         len2++;
+// //     }
+
+// //     char *result = (char*) malloc(len1 + len2 + 1);
+	
+// //     if (result != NULL) {
+// //         for (size_t i = 0; i < len1; i++) {
+// //             result[i] = str1[i];
+// //         }
+// //         for (size_t i = 0; i < len2; i++) {
+// //             result[len1 + i] = str2[i];
+// //         }
+// //         result[len1 + len2] = '\0';
+// //     }
+	
+// //     return result;
+// // }

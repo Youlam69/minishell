@@ -20,8 +20,8 @@ SRC =	obj/Minishell.c\
 		obj/free_or_exit.c\
 		obj/redirection.c\
 		obj/cd_func.c\
-		check_inparsing.c\
-		joinpath.c\
+		obj/check_inparsing.c\
+		obj/joinpath.c\
 		obj/ft_error.c
 		# obj/check_inout.c\
 		# obj/linked_list_totabstruct.c\
