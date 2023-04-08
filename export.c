@@ -78,35 +78,28 @@ t_env	*add_to_env(char *var, char *val, t_env *env, int j)
 
 t_env *split_export(char *arg, 	t_env *env)
 {
-	int		i;
-	int		j;
-	char	*var;
-	char	*val;
+	t_rdr tmp;
 
-	i = 0;
-	j = 0;
-	i = sheegal(arg);
-	if (i == 0)
+	reset_rdr(&tmp);
+	tmp.i = sheegal(arg);
+	if (tmp.i == 0)
 	{
 		check_var(arg, arg);
 		return (env);
 	}
-	if (i > 1 && arg[i - 1] == '+')
-		j = 1;
-	var = ft_substr(arg, 0, i - j);
-	val = ft_substr(arg, i + 1, ft_strlen(arg) - i);
-	if (!val)
+	if (tmp.i > 1 && arg[tmp.i - 1] == '+')
+		tmp.j = 1;
+	tmp.t1 = ft_substr(arg, 0, tmp.i - tmp.j);
+	tmp.t2 = ft_substr(arg, tmp.i + 1, ft_strlen(arg) - tmp.i);
+	if (!tmp.t2)
 	{
-		val = malloc(sizeof(char)); // ft_mallo
-		val[0] = '\0';
+		tmp.t2 = malloc(sizeof(char));
+		tmp.t2[0] = '\0';
 	}
-	if (check_var(var, arg))
-	{
-		frfr(var, val);
-		return (NULL);
-	}
+	if (check_var(tmp.t1, arg))
+		return (frfr(tmp.t1, tmp.t2), NULL);
 	else
-		env = add_to_env(var, val, env, j);
+		env = add_to_env(tmp.t1, tmp.t2, env, tmp.j);
 	return (env);
 }
 
