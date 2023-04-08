@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 08:44:59 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 17:59:39 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 20:19:17 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,8 @@ char	*convet_value(char *str)
 	int	j;
 
 	j = -1;
+	if (!str)
+		return (NULL);
 	while (str[++j])
 	{
 		if (str[j] < 0)

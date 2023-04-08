@@ -41,6 +41,16 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef struct s_rdr
+{
+	int		i;
+	int		j;
+	int		s;
+	char	*t1;
+	char	*t2;
+	char	*t3;
+}	t_rdr;
+
 typedef struct s_data
 {
 	int			nbrcmd;
