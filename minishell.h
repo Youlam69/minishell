@@ -118,6 +118,8 @@ char	*check_redirection_out(t_list *cmd, char *str);
 char	*check_heredoc(t_list *cmd, char *str);
 char	*check_outapend(t_list *cmd, char *str);
 char	*convet_value(char *str);
+int		check_name_reinout(char *str, int j);
+int		check_error_and_space_reinout(char *str, int s);
 
 
 

@@ -95,7 +95,8 @@ void	unset(t_data *data, char **cmd)
 			j++;
 		if (cmd[i][j])
 		{
-			ft_putstr_3d("minishell: unset: `",cmd[i], "': not a valid identifier", NULL);
+			ft_putstr_3d("minishell: unset: `", cmd[i], "': \
+				not a valid identifier", NULL);
 			data->exit_status = 1;
 			continue ;
 		}
@@ -104,10 +105,11 @@ void	unset(t_data *data, char **cmd)
 	data->exit_status = 0;
 }
 
-
 int	check_implmnt(t_data *data)
 {
-	t_list *cmd = data->cmd;
+	t_list	*cmd;
+
+	cmd = data->cmd;
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
 		return (1);
 	else if (!ft_strcmp(cmd->cmd[0], "pwd"))
@@ -125,7 +127,6 @@ int	check_implmnt(t_data *data)
 	return (0);
 }
 
-
 void env(t_env *env)
 {
 	while (env)
@@ -141,8 +142,6 @@ void	pwd(char *pwd)
 {
 	printf("%s\n", pwd);
 }
-
-
 
 void	echo(char **cmd)
 {
