@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 06:39:21 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 06:41:10 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 08:30:59 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,5 @@ int	is_routp(char c)
 
 int	is_special(char c)
 {
-	return(is_pipe(c) || is_rinp(c) || is_routp(c) || c == ' ');
+	return (is_pipe(c) || is_rinp(c) || is_routp(c) || c == ' ');
 }

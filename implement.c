@@ -109,21 +109,22 @@ int	check_implmnt(t_data *data)
 {
 	t_list *cmd = data->cmd;
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
-		return(1);
+		return (1);
 	else if (!ft_strcmp(cmd->cmd[0], "pwd"))
-		return(2);
+		return (2);
 	else if (!ft_strcmp(cmd->cmd[0], "env"))
-		return(3);
+		return (3);
 	else if (!ft_strcmp(cmd->cmd[0], "exit"))
-		return(4);
+		return (4);
 	else if (!ft_strcmp(cmd->cmd[0], "cd"))
-		return(5);
+		return (5);
 	else if (!ft_strcmp(cmd->cmd[0], "export"))
-		return(6);
+		return (6);
 	else if (!ft_strcmp(cmd->cmd[0], "unset"))
-		return(7);
+		return (7);
 	return (0);
 }
+
 
 void env(t_env *env)
 {
@@ -141,49 +142,7 @@ void	pwd(char *pwd)
 	printf("%s\n", pwd);
 }
 
-// int	chdir_anex(t_data *data, char ** cmd)
-// {
-// 	if (!cmd[1])
-// 		chdir("/home");
-// 	else if (cmd[2])
-// 	{
-// 		ft_putstr_fd("Minishell: cd: too many arguments\n", 2);
-// 		data->exit_status = 1;
-// 		return (1);
-// 	}
-// 	else if (chdir(cmd[1]) < 0)
-// 	{
-// 		ft_putstr_fd("Minishell : ", 2);
-// 		perror(cmd[1]);
-// 		data->exit_status = 1;
-// 		return (1);
-// 	}
-// 	return (0);
-// }
 
-// void cd(t_data *data)
-// {
-// 	char	*tmp;
-// 	char	**cmd;
-
-// 	cmd = data->cmd->cmd;
-// 	if (chdir_anex(data, cmd))
-// 		return ;
-// 	tmp = getcwd(NULL, 0);
-// 	if (!tmp)
-// 	{
-// 		ft_putstr_fd("cd: error retrieving current directory: \
-// 			getcwd: cannot access parent directories: No such file \
-// 			or directory\n", 2);
-// 		return ;
-// 	}
-// 	else
-// 	{
-// 		free(data->pwd);
-// 		data->pwd = tmp;
-// 	}
-// 	data->exit_status = 0;
-// }
 
 void	echo(char **cmd)
 {

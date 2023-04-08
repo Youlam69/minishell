@@ -15,7 +15,7 @@ int	ft_strrrcmp(char *str1, char *str2)
 	return (0);
 }
 
-int sheegal(char *conten)
+int	sheegal(char *conten)
 {
 	int	i;
 
@@ -45,7 +45,7 @@ char	*ft_valu(char *content)
 	int		i;
 
 	i = sheegal(content);
-	str = ft_substr(content, i + 1 , ft_strlen(content) - i);
+	str = ft_substr(content, i + 1, ft_strlen(content) - i);
 	return (str);
 }
 
@@ -115,78 +115,35 @@ int	ft_atoi(char *str)
 	return (res * sign);
 }
 
-// static int	ft_get_size(int n)
-// {
-// 	int	c;
-
-// 	c = 0;
-// 	if (n < 0)
-// 	{
-// 		c++;
-// 		n *= -1;
-// 	}
-// 	if (n == 0)
-// 		c++;
-// 	while (n != 0)
-// 	{
-// 		n = n / 10;
-// 		c++;
-// 	}
-// 	return (c);
-// }
-
-// char	*ft_itoa(int n)
-// {
-// 	char	*tab;
-// 	int		size;
-// 	long	nbr;
-
-// 	nbr = n;
-// 	size = ft_get_size(nbr);
-// 	tab = (char *)malloc(sizeof(char) * (size + 1));
-// 	if (!tab)
-// 		return (NULL);
-// 	tab[size--] = '\0';
-// 	if (nbr < 0)
-// 	{
-// 		nbr *= -1;
-// 		tab[0] = '-';
-// 	}
-// 	if (nbr == 0)
-// 		tab[size] = '0';
-// 	while (nbr != 0)
-// 	{
-// 		tab[size--] = nbr % 10 + '0';
-// 		nbr = nbr / 10;
-// 	}
-// 	return (tab);
-// }
-
-void	shlvl(t_env *ev)
-{
+void	shlvl_anex(t_env *ev)
+{	
 	int		i;
 	char	*tmp;
 
-	i = 2;
+	i = ft_atoi(ev->val);
+	if (i >= 999)
+	{
+		printf("warning: shell level (1000) too high\
+			, resetting to 1\n");
+	}
+	else if (i < 0)
+	i = 0;
+	else
+		i++;
+	tmp = ev->val;
+	ev->val = ft_itoa(i);
+	free(tmp);
+}
+
+void	shlvl(t_env *ev)
+{
 	if (!ev || !ev->var)
 		return ;
 	while (ev)
 	{
 		if (!ft_strcmp(ev->var, "SHLVL" ))
 		{
-			i = ft_atoi(ev->val);
-			if (i >= 999)
-			{
-				printf("warning: shell level (1000) too high\
-				, resetting to 1\n");
-			}
-			else if (i < 0)
-				i = 0;
-			else
-				i++;
-			tmp = ev->val;
-			ev->val = ft_itoa(i);
-			free(tmp);
+			shlvl_anex(ev);
 			break ;
 		}
 		ev = ev->next;
@@ -208,17 +165,3 @@ t_env	*ft_envar(char **env)
 	return (ptr);
 }
 
-int	ft_strtest(char *str1, int i, char *str2)
-{
-	int	j;
-
-	j = 0;
-	while ((str1[i] && str1[i] != '$') || str2[j])
-	{
-		if (str1[i] != str2[j])
-			return (1);
-		i++;
-		j++;
-	}
-	return (0);
-}

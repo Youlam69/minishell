@@ -6,13 +6,13 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 01:29:51 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 07:29:48 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 08:03:22 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_strlen(char *s)
+int	ft_strlen(char *s)
 {
 	int	i;
 
@@ -84,7 +84,7 @@ static int	size_tab(char const *s, char c)
 	return (size_2d);
 }
 
-char	*alloc_str(char **tab, char  *s, char c, int i)
+char	*alloc_str(char **tab, char *s, char c, int i)
 {
 	int		j;
 	char	*str;

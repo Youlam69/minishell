@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 07:05:01 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 07:05:02 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 09:15:29 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	free_env(t_env *lst)
 		free(tmp);
 	}
 }
+
 void	free_all_exit(t_data *data, int ref)
 {
 	free_list(data->cmd);
@@ -66,25 +67,8 @@ void	free_all_exit(t_data *data, int ref)
 	}
 }
 
-void	ft_exit(t_data *data, char **cmd)
+void	annex_exit(t_data *data, char *cmd, int i)
 {
-	int	i;
-
-	i = 0;
-	while (cmd[0] && is_digit(cmd[0][i]))
-		i++;
-	if (cmd[0] && cmd[0][i])
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(cmd[0], 2);
-		ft_putstr_fd(": numeric argument required", 2);
-		ft_putstr_fd("\n", 2);
-		data->exit_status = 255;
-		free_all_exit(data, 1);
-	}
-	i = 0;
-	while (cmd[i])
-		i++;
 	if (i == 0)
 	{
 		data->exit_status = 0;
@@ -97,7 +81,27 @@ void	ft_exit(t_data *data, char **cmd)
 	}
 	else
 	{
-		data->exit_status = ft_atoi(cmd[0]);
+		data->exit_status = ft_atoi(cmd);
 		free_all_exit(data, 1);
 	}
 }
+
+void	ft_exit(t_data *data, char **cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[0] && is_digit(cmd[0][i]))
+		i++;
+	if (cmd[0] && cmd[0][i])
+	{
+		ft_putstr_3d("minishell: exit: ",cmd[0],": numeric argument required", NULL);
+		data->exit_status = 255;
+		free_all_exit(data, 1);
+	}
+	i = 0;
+	while (cmd[i])
+		i++;
+	annex_exit(data, cmd[0], i);
+}
+
