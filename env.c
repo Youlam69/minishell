@@ -15,43 +15,41 @@ int	ft_strrrcmp(char *str1, char *str2)
 	return (0);
 }
 
-
 int sheegal(char *conten)
 {
-	int i;
+	int	i;
+
 	i = 0;
-	while(conten[i])
+	while (conten[i])
 	{
-		if(conten[i] == '=')
-			break;
+		if (conten[i] == '=')
+			break ;
 		i++;
 	}
-	return(i);
+	return (i);
 }
 
-char *ft_variab(char *content)
+char	*ft_variab(char *content)
 {
-	char *str;
-	int i;
+	char	*str;
+	int		i;
 
 	i = sheegal(content);
-	str = ft_substr(content, 0 , i);
-	return(str);
+	str = ft_substr(content, 0, i);
+	return (str);
 }
 
-char *ft_valu(char *content)
+char	*ft_valu(char *content)
 {
-	char *str;
-	int i;
+	char	*str;
+	int		i;
 
 	i = sheegal(content);
 	str = ft_substr(content, i + 1 , ft_strlen(content) - i);
-	return(str);
+	return (str);
 }
 
-
-
-t_env	*ft_lstnew(char *content)  
+t_env	*ft_lstnew(char *content)
 {
 	t_env	*new;
 
@@ -89,8 +87,7 @@ void	ft_lstadd_back(t_env **alst, t_env *new)
 	}
 }
 
-
-int ft_isdigit(char c)
+int	ft_isdigit(char c)
 {
 	return (c <= '0' || c >= '9');
 }
@@ -165,24 +162,23 @@ int	ft_atoi(char *str)
 // 	return (tab);
 // }
 
-
-
-void shlvl(t_env *ev)
+void	shlvl(t_env *ev)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
+
 	i = 2;
-	if(!ev || !ev->var)
-		return;
+	if (!ev || !ev->var)
+		return ;
 	while (ev)
 	{
-		if(!ft_strcmp(ev->var, "SHLVL" ))
+		if (!ft_strcmp(ev->var, "SHLVL" ))
 		{
 			i = ft_atoi(ev->val);
-			if(i >= 999)
+			if (i >= 999)
 			{
-				printf("warning: shell level (1000) too high, resetting to 1\n"); //to change
-				i = 1;
+				printf("warning: shell level (1000) too high\
+				, resetting to 1\n");
 			}
 			else if (i < 0)
 				i = 0;
@@ -191,25 +187,25 @@ void shlvl(t_env *ev)
 			tmp = ev->val;
 			ev->val = ft_itoa(i);
 			free(tmp);
-			break;
+			break ;
 		}
 		ev = ev->next;
 	}
 }
 
-t_env *ft_envar(char **env)
+t_env	*ft_envar(char **env)
 {
-    int i = -1;
-    
-    t_env *ptr;
-    
-    ptr = NULL;
+	int		i;
+	t_env	*ptr;
+
+	i = -1;
+	ptr = NULL;
 	if (!env || env[0] == NULL)
 		return (NULL);
-    while(env[++i])
+	while (env[++i])
 		ft_lstadd_back(&ptr, ft_lstnew(env[i]));
 	shlvl(ptr);
-    return (ptr);
+	return (ptr);
 }
 
 int	ft_strtest(char *str1, int i, char *str2)

@@ -20,3 +20,4 @@ char	*ft_strtrim(char const *s1, char const *set)
 	len = j - i + 1;
 	return (ft_substr(s1, i, len));
 }
+

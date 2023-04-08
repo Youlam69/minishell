@@ -1,37 +1,48 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   is_func.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/08 06:39:21 by ylamraou          #+#    #+#             */
+/*   Updated: 2023/04/08 06:41:10 by ylamraou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-
-int is_dq(char c)
+int	is_dq(char c)
 {
-    return (c == DQ);
+	return (c == DQ);
 }
 
-int is_dlr(char c)
+int	is_dlr(char c)
 {
-    return (c == DLR);
-}
-int is_q(char c)
-{
-    return (c == SQ);
-}
-int is_pipe(char c)
-{
-    return(c == PIPE);
+	return (c == DLR);
 }
 
-int is_rinp(char c)
+int	is_q(char c)
 {
-    return(c == RINPUT);
+	return (c == SQ);
 }
 
-int is_routp(char c)
+int	is_pipe(char c)
 {
-    return(c == ROUTPUT);
+	return (c == PIPE);
 }
 
-int is_special(char c)
+int	is_rinp(char c)
 {
-    return(is_pipe(c) || is_rinp(c) || is_routp(c) || c == ' ');
+	return (c == RINPUT);
+}
+
+int	is_routp(char c)
+{
+	return (c == ROUTPUT);
+}
+
+int	is_special(char c)
+{
+	return(is_pipe(c) || is_rinp(c) || is_routp(c) || c == ' ');
 }

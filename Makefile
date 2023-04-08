@@ -19,6 +19,7 @@ SRC =	obj/Minishell.c\
 		obj/export.c\
 		obj/free_or_exit.c\
 		obj/redirection.c\
+		obj/cd_func.c\
 		obj/ft_error.c
 		# obj/check_inout.c\
 		# obj/linked_list_totabstruct.c\
@@ -29,6 +30,7 @@ SRC =	obj/Minishell.c\
 OBJ = $(SRC:.c=.o)
 
 mkdir = mkdir -p
+RDDIR = /goinfre/ylamraou/homebrew/opt/readline
 
 dir = obj
 
@@ -37,11 +39,11 @@ dir = obj
 all: $(NAME)
 
 $(NAME): ${dir} $(OBJ)  $(INCLUDE)
-	$(CC) $(FLAGS) $(OBJ) -lreadline -o $(NAME) 
+	$(CC) $(FLAGS) -lreadline -I $(RDDIR)/include -L $(RDDIR)/lib $(OBJ) -o $(NAME) 
 
 
 obj/%.o : %.c $(INCLUDE)
-	$(CC) $(FLAGS) -c $< -o $@
+	$(CC) $(FLAGS) -I $(RDDIR)/include -c $< -o $@
 
 ${dir} : 
 	@${mkdir} ${dir}

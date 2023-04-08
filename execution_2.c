@@ -1,29 +1,56 @@
 #include "minishell.h"
 
-int	dup_close(int in, int out)
+int	dup_close(int in, int out )
 {
-	if (dup2(in, 0))
-		return (-1);
+	dup2(in, 0);
 	if (in != 0)
 		close(in);
-	if (dup2(out, 1))
-		return (-1);
+	dup2(out, 1);
 	if (out != 1)
 		close(out);
-	if (out != 1)
-		close(out);
+
+
+	printf("in |%d|   out |%d|\n", in, out);
+	fflush(stdout);
 	return (0);
 }
 
-// void	child(t_data *data, int *fdp, int fd2, int i)  // int *fdp == fdp[2]
+
+
+
+// int	dup_close(int in, int out, int fd2)
+// {
+//     if (in != 0)
+//         dup2(in, 0);
+//     if (out != 1)
+//         dup2(out, 1);
+//     if (in != 0)
+//         close(in);
+//     if (out != 1)
+//         close(out);
+//     if (fd2 != -1)
+//         close(fd2);
+
+//     printf("in |%d|   out |%d|\n", in, out);
+//     fflush(stdout);
+//     return (0);
+// }
+
+
+
+
+
+
+// void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 // {
 // 	t_list *cmd;
 
 // 	cmd = data->cmd;
 // 	close(fdp[0]);
-// 	if (i + 1 < data->nbrcmd)
+// 	if (cmd->next)
 // 	{
-// 		if (i == 0)
+// 		ft_putstr_fd("ana wast next kayn \n",2);
+// 		if (ft_lstsize(cmd) == data->nbrcmd)
 // 		{
 // 			if (cmd->fdinout[0] < 0)
 // 				exit(1); // should manage the errors
@@ -32,9 +59,13 @@ int	dup_close(int in, int out)
 // 		else
 // 			dup_close(fd2, fdp[1]);
 // 	}
-// 	else
-// 		dup_close(fd2, cmd->fdinout[1]);
+// 	else{
+// 		ft_putstr_fd("ana wast else \n",2);
+// 		dup_close(cmd->fdinout[1], cmd->fdinout[1]);
+
+// 	}
 // }
+
 void	exec_imp(t_data *data, int imp, int ref)
 {
 	data->exit_status = 0;
@@ -74,6 +105,55 @@ void handler_c(int sig)
 		exit(130);
 	}
 }
+
+// void	child(t_data *data, int *fdp, int fd2)
+// {
+//     t_list *cmd = data->cmd;
+//     int imp;
+
+//     if (cmd->fdinout[1] < 0 || cmd->fdinout[0] < 0)
+//         exit(1);
+
+//     close(fdp[0]);
+
+//     if (cmd->next)
+//     {
+//         if (ft_lstsize(cmd) == data->nbrcmd)
+//         {
+//             if (cmd->fdinout[1] > 1)
+//                 dup_close(cmd->fdinout[0], cmd->fdinout[1], -1);
+//             else
+//                 dup_close(cmd->fdinout[0], fdp[1], -1);
+//         }
+//         else
+//         {
+//             int in = cmd->fdinout[0] > 1 ? cmd->fdinout[0] : fd2;
+//             int out = cmd->fdinout[1] > 1 ? cmd->fdinout[1] : fdp[1];
+//             dup_close(in, out, -1);
+//         }
+//     }
+//     else
+//     {
+//         if (ft_lstsize(cmd) == data->nbrcmd)
+//             dup_close(cmd->fdinout[0], cmd->fdinout[1], -1);
+//         else
+//             dup_close(fd2, cmd->fdinout[1], -1);
+//     }
+
+//     imp = check_implmnt(data);
+//     if (imp)
+//         exec_imp(data, imp, 1);
+
+//     if (!cmd->cmdp[0])
+//         exit(0);
+
+//     execve(cmd->cmdp, cmd->cmd, data->envc);
+//     ft_putstr_fd("command not found: ", 2);
+//     ft_putstr_fd(cmd->cmd[0], 2);
+//     ft_putstr_fd("\n", 2);
+//     exit(127);
+// }
+
 void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 {
 	t_list *cmd;
@@ -110,9 +190,18 @@ void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 	else
 	{
 		if (ft_lstsize(cmd) == data->nbrcmd)
+		{
 			dup_close(cmd->fdinout[0], cmd->fdinout[1]);
+			printf(" AFTER\n");
+			fflush(stdout);
+		}
 		else
+		{
+			printf("befor FTER\n");
+			fflush(stdout);
+
 			dup_close(fd2, cmd->fdinout[1]);
+		}
 	}
 	imp = check_implmnt(data);
 	if(imp)
@@ -127,6 +216,8 @@ void	child(t_data *data, int *fdp, int fd2)  // int *fdp == fdp[2]
 	exit(127);
 
 }
+
+
 void	parent(t_data *data, int *fdp)
 {
 	// int	i;
@@ -204,7 +295,7 @@ void	tofork(t_data *data, int fd2)
 		parent(data, fdp);
 		// if(fdh[0] > 0)
 			// close(fdh[0]);
-		// if(fdp[0] > 0)
+		if(fdp[0] > 0)
 			close(fdp[0]);
 		// close(fdp[1]);
 		// if ((accs(cmd->cmdp)))
@@ -215,10 +306,10 @@ void	tofork(t_data *data, int fd2)
 		// 	tofork(data, fdp[0]);
 		// if (fdp[0] != 0) close(fdp[0]);
 		// parent(data, fdp, &i);
-	}
 	waitpid(-1,&ext_s,0);
 	if (!data->cmd)
 		if (WIFEXITED(ext_s))
 			data->exit_status = WEXITSTATUS(ext_s);
+	}
 
 }

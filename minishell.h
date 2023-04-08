@@ -68,6 +68,8 @@ typedef struct s_data
 }   t_data;
 
 
+void	free_unset(t_env **env, t_env *tmp_env);
+void	ft_putstr_3d(char *str1, char *str2, char *str3, char *str4);
 void ft_putstr_fd(char *str, int fd);
 int	check_implmnt(t_data *data);
 char	*ft_strdup(char *s1);

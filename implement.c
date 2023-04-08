@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int ft_strncmp(char *s1, char *s2, int n)
+int	ft_strncmp(char *s1, char *s2, int n)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while ((i < n )&& s1[i] && s2[i])
@@ -15,34 +15,33 @@ int ft_strncmp(char *s1, char *s2, int n)
 		return (0);
 	return (s1[i] - s2[i]);
 }
-void ft_putstr_fd(char *str, int fd)
+
+void	ft_putstr_fd(char *str, int fd)
 {
-	int i = -1;
-	if(!str)
+	int	i;
+
+	i = -1;
+	if (!str)
 		return ;
 	while (str[++i])
 		write(fd, &str[i], 1);
 }
 
-// void	check_implmnt(t_data *data)
-// {
-// 	t_list *cmd = data->cmd;
-// 	if (ft_strcmp(cmd->cmd[0], "echo") == 0)
-// 		echo(cmd->cmd);
-// 	else if (ft_strcmp(cmd->cmd[0], "cd") == 0)
-// 		cd(data);
-// 	else if (ft_strcmp(cmd->cmd[0], "pwd") == 0)
-// 		pwd(data->pwd);
-// 	else if (ft_strcmp(cmd->cmd[0], "export") == 0)
-// 		export(data->env, cmd->cmd);
-// 	// else if (ft_strcmp(cmd->cmd[0], "unset") == 0)
-// 	// 	unset(data, &cmd->cmd[1], child);
-// 	// else if (ft_strcmp(cmd->cmd[0], "env") == 0)
-// 	// 	env(data->env);
-// 	// else if (ft_strcmp(cmd->cmd[0], "exit") == 0)
-// 	// 	ft_exit(data, &cmd->cmd[1], &data->exit_status);
-// }
-
+void	free_unset(t_env **env, t_env *tmp_env)
+{
+	if (tmp_env->next)
+	{
+		*env = tmp_env->next;
+		frfr(tmp_env->var, tmp_env->val);
+		free(tmp_env);
+	}
+	else
+	{
+		frfr(tmp_env->var, tmp_env->val);
+		free(tmp_env);
+		*env = NULL;
+	}
+}
 
 void	unset_var(t_env **env, char *var)
 {
@@ -58,30 +57,11 @@ void	unset_var(t_env **env, char *var)
 			if (prev)
 			{
 				prev->next = tmp_env->next;
-				free(tmp_env->var);
-				free(tmp_env->val);
+				frfr(tmp_env->var, tmp_env->val);
 				free(tmp_env);
 			}
 			else
-			{
-				if (tmp_env->next)
-				{
-
-					*env = tmp_env->next;
-					free(tmp_env->var);
-					free(tmp_env->val);
-					free(tmp_env);
-					// *env = NULL;
-
-				}
-				else
-				{
-					free(tmp_env->var);
-					free(tmp_env->val);
-					free(tmp_env);
-					*env = NULL;
-				}
-			}
+				free_unset(env, tmp_env);
 			return ;
 		}
 		prev = tmp_env;
@@ -89,6 +69,18 @@ void	unset_var(t_env **env, char *var)
 	}
 }
 
+void	ft_putstr_3d(char *str1, char *str2, char *str3, char *str4)
+{
+	if (str1)
+		ft_putstr_fd(str1, 2);
+	if (str1)
+		ft_putstr_fd(str2, 2);
+	if (str3)
+		ft_putstr_fd(str3, 2);
+	if (str4)
+		ft_putstr_fd(str4, 2);
+	ft_putstr_fd("\n", 2);
+}
 
 void	unset(t_data *data, char **cmd)
 {
@@ -103,19 +95,15 @@ void	unset(t_data *data, char **cmd)
 			j++;
 		if (cmd[i][j])
 		{
-			ft_putstr_fd("minishell: unset: `",2);
-			ft_putstr_fd(cmd[i], 2);
-			ft_putstr_fd("': not a valid identifier",2);
-			ft_putstr_fd("\n",2);
+			ft_putstr_3d("minishell: unset: `",cmd[i], "': not a valid identifier", NULL);
 			data->exit_status = 1;
 			continue ;
 		}
 		unset_var(&data->env, cmd[i]);
 	}
 	data->exit_status = 0;
-	// if (child)
-	// 	exit(0);
 }
+
 
 int	check_implmnt(t_data *data)
 {
@@ -148,55 +136,60 @@ void env(t_env *env)
 	exit(0);
 }
 
-void pwd(char *pwd)
+void	pwd(char *pwd)
 {
 	printf("%s\n", pwd);
 }
 
-void cd(t_data *data)
-{
-	char *tmp;
-	char **cmd;
+// int	chdir_anex(t_data *data, char ** cmd)
+// {
+// 	if (!cmd[1])
+// 		chdir("/home");
+// 	else if (cmd[2])
+// 	{
+// 		ft_putstr_fd("Minishell: cd: too many arguments\n", 2);
+// 		data->exit_status = 1;
+// 		return (1);
+// 	}
+// 	else if (chdir(cmd[1]) < 0)
+// 	{
+// 		ft_putstr_fd("Minishell : ", 2);
+// 		perror(cmd[1]);
+// 		data->exit_status = 1;
+// 		return (1);
+// 	}
+// 	return (0);
+// }
 
-	cmd = data->cmd->cmd;
-	if (!cmd[1])
-		chdir("/home");
-		// chdir(data->home);
-	else if (cmd[2])
-	{
-		ft_putstr_fd("Minishell: cd: too many arguments\n", 2);
-		data->exit_status = 1;
-		// exit(1);
-		return;
-	}
-	else if (chdir(cmd[1]) < 0)
-	{
-		ft_putstr_fd("Minishell : ", 2);
-		perror(cmd[1]);	
-		data->exit_status = 1;
-		return;
-	}
-	tmp = getcwd(NULL, 0);
-	if (!tmp)
-	{
-		ft_putstr_fd("cd: error retrieving current directory: \
-			getcwd: cannot access parent directories: No such file \
-			or directory\n", 2);
-		return;
-	}
-	else
-	{
-		free(data->pwd);
-		data->pwd = tmp;
-	}
-	data->exit_status = 0;
-}
+// void cd(t_data *data)
+// {
+// 	char	*tmp;
+// 	char	**cmd;
 
-void echo(char **cmd)
+// 	cmd = data->cmd->cmd;
+// 	if (chdir_anex(data, cmd))
+// 		return ;
+// 	tmp = getcwd(NULL, 0);
+// 	if (!tmp)
+// 	{
+// 		ft_putstr_fd("cd: error retrieving current directory: \
+// 			getcwd: cannot access parent directories: No such file \
+// 			or directory\n", 2);
+// 		return ;
+// 	}
+// 	else
+// 	{
+// 		free(data->pwd);
+// 		data->pwd = tmp;
+// 	}
+// 	data->exit_status = 0;
+// }
+
+void	echo(char **cmd)
 {
-	int i;
-	int j;
-	int del_nl;
+	int	i;
+	int	j;
+	int	del_nl;
 
 	i = 1;
 	del_nl = 0;
@@ -206,7 +199,7 @@ void echo(char **cmd)
 		while (cmd[i][j] && cmd[i][j] == 'n')
 			j++;
 		if (cmd[i][j])
-			break;
+			break ;
 		del_nl = 1;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 01:29:51 by ylamraou          #+#    #+#             */
-/*   Updated: 2021/12/18 19:10:35 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 07:29:48 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 int ft_strlen(char *s)
 {
-    int i;
+	int	i;
 
-    i = 0;
-	if(!s)
+	i = 0;
+	if (!s)
 		return (0);
-    while(s[i])
-        i++;
-    return (i);
+	while (s[i])
+		i++;
+	return (i);
 }
 
 char	*ft_substr(char *s, int start, int len)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*str;
 
 	i = 0;
@@ -52,8 +52,6 @@ char	*ft_substr(char *s, int start, int len)
 	}
 	return (str[j] = '\0', str);
 }
-
-
 
 static int	size_str(char const *s, char c)
 {
@@ -86,7 +84,7 @@ static int	size_tab(char const *s, char c)
 	return (size_2d);
 }
 
-char 	*alloc_str(char **tab, char  *s, char c, int i)
+char	*alloc_str(char **tab, char  *s, char c, int i)
 {
 	int		j;
 	char	*str;
@@ -112,15 +110,13 @@ char	**ft_split(char *s, char c)
 {
 	char	**tab;
 	int		i;
-	int		len;
 
 	if (!s)
 		return (NULL);
-	len = size_tab(s, c);
-	tab = malloc(sizeof (char *) * len + 1);
+	tab = malloc(sizeof (char *) * (size_tab(s, c) + 1));
 	if (!tab)
 		return (NULL);
-	if(!*s)
+	if (!*s)
 	{
 		tab[0] = s;
 		return (tab);
