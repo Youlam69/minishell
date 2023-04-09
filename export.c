@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/08 23:42:08 by ylamraou          #+#    #+#             */
+/*   Updated: 2023/04/08 23:44:15 by ylamraou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-t_env	*ft_lstnew_export(char *var, char *val)  
+t_env	*ft_lstnew_export(char *var, char *val)
 {
 	t_env	*new;
 
@@ -26,9 +38,9 @@ int	check_var(char *var, char *arg)
 	{
 		if (!is_good(var[i]) || var[0] == '=' || is_digit(var[0]))
 		{
-			ft_putstr_fd("bash: export: `", 2); // putstr fd 2
-			ft_putstr_fd(arg, 2); // putstr fd 2
-			ft_putstr_fd("': not a valid identifier\n", 2); // putstr fd 2
+			ft_putstr_fd("bash: export: `", 2);
+			ft_putstr_fd(arg, 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
 			return (-1);
 		}
 	}
@@ -80,10 +92,9 @@ t_env	*add_to_env(char *var, char *val, t_env *env, int j)
 	return (env);
 }
 
-
-t_env *split_export(char *arg, 	t_env *env)
+t_env	*split_export(char *arg, t_env *env)
 {
-	t_rdr tmp;
+	t_rdr	tmp;
 
 	reset_rdr(&tmp);
 	tmp.i = sheegal(arg);
@@ -106,107 +117,4 @@ t_env *split_export(char *arg, 	t_env *env)
 	else
 		env = add_to_env(tmp.t1, tmp.t2, env, tmp.j);
 	return (env);
-}
-
-void	sort_and_prnit(char **arg)
-{
-	t_rdr tmp;
-
-	reset_rdr(&tmp);
-	tmp.i = -1;
-	while (arg[tmp.s])
-		tmp.s++;
-	while (++tmp.i < tmp.s - 1)
-	{
-		tmp.j = -1;
-		while (++tmp.j < tmp.s - tmp.i - 1)
-		{
-			if (strcmp(arg[tmp.j], arg[tmp.j + 1]) > 0)
-			{
-				tmp.t1 = arg[tmp.j];
-				arg[tmp.j] = arg[tmp.j + 1];
-				arg[tmp.j + 1] = tmp.t1;
-			}
-		}
-	}
-	tmp.i = 0;
-	while (arg[tmp.i])
-		printf("declare -x %s\n", arg[tmp.i++]);
-	free_after_split(arg);
-}
-
-int	ft_lstsize_env(t_env *lst)
-{
-	int	i;
-
-	i = 0;
-	if (!lst)
-		return (0);
-	while (lst)
-	{
-		lst = lst->next;
-		i++;
-	}
-	return (i);
-}
-
-void	join_and_free_env(char **tab, int i, t_env *tmp)
-{
-	char	*tp;
-
-	tab[i] = strjoin(tmp->var, "=");
-	tp = tab[i];
-	tab[i] = strjoin(tp, "\'");
-	free(tp);
-	tp = tab[i];
-	tab[i] = strjoin(tp, tmp->val);
-	free(tp);
-	tp = tab[i];
-	tab[i] = strjoin(tab[i], "\'");
-	free(tp);
-}
-
-void	print_env(t_env *env)
-{
-	t_env	*tmp;
-	char	**tab;
-	int		i;
-
-	i = 0;
-	tab = malloc(sizeof(char *) * ft_lstsize_env(env) + 1);
-	tmp = env;
-	if (!tmp)
-		return ;
-	while (tmp)
-	{
-		if (tmp->var)
-		{
-			if (!tmp->val)
-				tab[i] = strjoin(NULL, tmp->var);
-			else
-				join_and_free_env(tab, i, tmp);
-			i++;
-			tab[i] = NULL;
-		}
-		tmp = tmp->next;
-	}
-	sort_and_prnit(tab);
-}
-
-void	export(t_data* data, char** val)
-{
-	t_env	*env;
-	int		i;
-
-	i = 0;
-	env = data->env;
-	while (val[++i])
-	{
-		if (sheegal(val[i]) == ft_strlen(val[i]))
-			data->env = add_to_env(val[i], NULL, data->env, 0);
-		else
-			data->env = split_export(val[i], data->env);
-	}
-	if (i == 1)
-		print_env(env);
 }

@@ -6,23 +6,11 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 01:29:51 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 08:03:22 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/08 23:50:10 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_strlen(char *s)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
 
 char	*ft_substr(char *s, int start, int len)
 {

@@ -1,4 +1,16 @@
-# include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/08 23:58:40 by ylamraou          #+#    #+#             */
+/*   Updated: 2023/04/09 00:00:31 by ylamraou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 void	hendl_ctr_c(int sig)
 {
@@ -7,41 +19,6 @@ void	hendl_ctr_c(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-}
-
-void	frfr(char *str, char *ptr)
-{
-	if (str)
-		free(str);
-	if (ptr)
-		free(ptr);
-}
-
-int	ft_lstsize(t_list *lst)
-{
-	int	i;
-
-	i = 0;
-	if (!lst)
-		return (0);
-	while (lst)
-	{
-		lst = lst->next;
-		i++;
-	}
-	return (i);
-}
-
-void	init_data(t_data *data)
-{
-	data->nbrcmd = 0;
-	data->cmd = NULL;
-	data->env = NULL;
-	data->envc = NULL;
-	data->splitedp = NULL;
-	data->exit_status = 0;
-	data->homep = NULL;
-	data->pwd = NULL;
 }
 
 int	ft_size_env(t_env *env)
@@ -86,7 +63,7 @@ char	**take_envc(t_env *env)
 	return (envc[i] = NULL, envc);
 }
 
-void start_mini(t_data *data, char *str, char *tmp, char **env)
+void	start_mini(t_data *data, char *str, char *tmp, char **env)
 {
 	init_data(data);
 	data->env = ft_envar(env);
@@ -113,7 +90,7 @@ void start_mini(t_data *data, char *str, char *tmp, char **env)
 	}
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	t_data	data;
 
@@ -123,5 +100,3 @@ int main(int ac, char **av, char **env)
 	start_mini(&data, NULL, NULL, env);
 	return (0);
 }
-
-

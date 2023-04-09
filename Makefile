@@ -1,5 +1,5 @@
 
-NAME = Minishell
+NAME = minishell
 
 CC = cc
 
@@ -22,11 +22,20 @@ SRC =	obj/Minishell.c\
 		obj/cd_func.c\
 		obj/check_inparsing.c\
 		obj/joinpath.c\
-		obj/ft_error.c
-		# obj/check_inout.c\
-		# obj/linked_list_totabstruct.c\
-
-
+		obj/ft_error.c\
+		obj/env_plus.c\
+		obj/env_two.c\
+		obj/exec.c\
+		obj/export_plus.c\
+		obj/free_or_exit_two.c\
+		obj/ft_split_two.c\
+		obj/implement_two.c\
+		obj/extra_main.c\
+		obj/parsing_two.c\
+		obj/parsing_one.c\
+		obj/parsing_creat_two.c\
+		obj/libft_two.c\
+		obj/libft_one.c
 
 
 OBJ = $(SRC:.c=.o)

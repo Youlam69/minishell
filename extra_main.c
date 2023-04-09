@@ -1,38 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_func.c                                          :+:      :+:    :+:   */
+/*   extra_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/08 06:39:21 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 23:57:09 by ylamraou         ###   ########.fr       */
+/*   Created: 2023/04/08 23:59:41 by ylamraou          #+#    #+#             */
+/*   Updated: 2023/04/09 00:00:35 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_q(char c)
+void	frfr(char *str, char *ptr)
 {
-	return (c == SQ);
+	if (str)
+		free(str);
+	if (ptr)
+		free(ptr);
 }
 
-int	is_pipe(char c)
+int	ft_lstsize(t_list *lst)
 {
-	return (c == PIPE);
+	int	i;
+
+	i = 0;
+	if (!lst)
+		return (0);
+	while (lst)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i);
 }
 
-int	is_rinp(char c)
+void	init_data(t_data *data)
 {
-	return (c == RINPUT);
-}
-
-int	is_routp(char c)
-{
-	return (c == ROUTPUT);
-}
-
-int	is_special(char c)
-{
-	return (is_pipe(c) || is_rinp(c) || is_routp(c) || c == ' ');
+	data->nbrcmd = 0;
+	data->cmd = NULL;
+	data->env = NULL;
+	data->envc = NULL;
+	data->splitedp = NULL;
+	data->exit_status = 0;
+	data->homep = NULL;
+	data->pwd = NULL;
 }

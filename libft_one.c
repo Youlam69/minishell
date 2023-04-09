@@ -1,38 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_func.c                                          :+:      :+:    :+:   */
+/*   libft_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/08 06:39:21 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/08 23:57:09 by ylamraou         ###   ########.fr       */
+/*   Created: 2023/04/09 01:05:44 by ylamraou          #+#    #+#             */
+/*   Updated: 2023/04/09 01:06:01 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_q(char c)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	return (c == SQ);
-}
+	size_t	i;
+	char	*ptr;
 
-int	is_pipe(char c)
-{
-	return (c == PIPE);
-}
-
-int	is_rinp(char c)
-{
-	return (c == RINPUT);
-}
-
-int	is_routp(char c)
-{
-	return (c == ROUTPUT);
-}
-
-int	is_special(char c)
-{
-	return (is_pipe(c) || is_rinp(c) || is_routp(c) || c == ' ');
+	ptr = (char *)b;
+	i = 0;
+	while (i < len)
+		ptr[i++] = (unsigned char)c;
+	return (ptr);
 }
