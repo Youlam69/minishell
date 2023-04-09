@@ -6,7 +6,7 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 23:49:54 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/09 01:00:12 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/09 01:10:34 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,26 +47,26 @@ int	is_dlr(char c)
 	return (c == DLR);
 }
 
-char    *ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-    int        len;
-    int        l;
-    int        i;
-    char    *str;
+	int		len;
+	int		l;
+	int		i;
+	char	*str;
 
-    if (!s1)
-        return (NULL);
-    len = ft_strlen(s1) + ft_strlen(s2);
-    str = (char *)malloc(sizeof(char) * len);
-    l = ft_strlen(s1);
-    if (!str)
-        return (NULL);
-    i = -1;
-    while (i++ <= l)
-        str[i] = s1[i];
-    i = 0;
-    while (l < len)
-        str[l++] = s2[i++];
-    str[len] = '\0';
-    return (str);
+	if (!s1)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	str = (char *)malloc(sizeof(char) * len);
+	l = ft_strlen(s1);
+	if (!str)
+		return (NULL);
+	i = -1;
+	while (i++ <= l)
+		str[i] = s1[i];
+	i = 0;
+	while (l < len)
+		str[l++] = s2[i++];
+	str[len] = '\0';
+	return (str);
 }

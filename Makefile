@@ -35,7 +35,9 @@ SRC =	obj/Minishell.c\
 		obj/parsing_one.c\
 		obj/parsing_creat_two.c\
 		obj/libft_two.c\
-		obj/libft_one.c
+		obj/libft_one.c\
+		obj/redirection_one.c\
+		obj/redirection_two.c
 
 
 OBJ = $(SRC:.c=.o)

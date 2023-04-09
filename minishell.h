@@ -188,6 +188,8 @@ void	*ft_calloc(int count, int size);
 int	ft_strlcat(char *dst, char *src, int size);
 void	ft_bzero(void *s, size_t n);
 void	*ft_memset(void *b, int c, size_t len);
+void	loop_over_j(char *str, t_rdr *tmp);
+int	redir_assist(t_rdr *tmp, t_list *cmd, char **str);
 // char	*check_redirection_in(int *tab, char *str, t_list *cmd);
 
 #endif

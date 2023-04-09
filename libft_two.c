@@ -6,11 +6,11 @@
 /*   By: ylamraou <ylamraou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 00:59:11 by ylamraou          #+#    #+#             */
-/*   Updated: 2023/04/09 00:59:41 by ylamraou         ###   ########.fr       */
+/*   Updated: 2023/04/09 01:09:19 by ylamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -50,7 +50,7 @@ void	strjoin_help(char *src, int *i, char *tmp)
 	int	len;
 
 	len = 0;
-	while(src && src[len])
+	while (src && src[len])
 	{
 		tmp[*i] = src[len];
 		len++;
@@ -59,31 +59,31 @@ void	strjoin_help(char *src, int *i, char *tmp)
 	tmp[*i] = '\0';
 }
 
-char    *strjoin(char *dst, char *src)
+char	*strjoin(char *dst, char *src)
 {
-	int i;
-	int ln;
-	char *tmp = NULL;
+	int		i;
+	int		ln;
+	char	*tmp;
 
 	i = 0;
 	ln = ft_strlen(dst) + ft_strlen(src);
 	tmp = malloc(sizeof(char) * (ln + 1));
-	if(!tmp)
+	if (!tmp)
 	{
 		printf("Error: malloc failed in strjoin\n");
-		return NULL;
+		return (NULL);
 	}
 	tmp[ln] = '\0';
-	if(dst)
+	if (dst)
 	{
-		while(dst[i])
+		while (dst[i])
 		{
 			tmp[i] = dst[i];
 			i++;
 		}
 	}
-	if(!src)
-		return tmp;
+	if (!src)
+		return (tmp);
 	strjoin_help(src, &i, tmp);
 	return (tmp);
 }
